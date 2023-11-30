@@ -14,16 +14,16 @@ void func_808949B8(BgJyaBombchuiwa* this, PlayState* play);
 void BgJyaBombchuiwa_CleanUpAfterExplosion(BgJyaBombchuiwa* this, PlayState* play);
 void BgJyaBombchuiwa_SpawnLightRay(BgJyaBombchuiwa* this, PlayState* play);
 
-const ActorInit Bg_Jya_Bombchuiwa_InitVars = {
-    ACTOR_BG_JYA_BOMBCHUIWA,
-    ACTORCAT_BG,
-    FLAGS,
-    OBJECT_JYA_OBJ,
-    sizeof(BgJyaBombchuiwa),
-    (ActorFunc)BgJyaBombchuiwa_Init,
-    (ActorFunc)BgJyaBombchuiwa_Destroy,
-    (ActorFunc)BgJyaBombchuiwa_Update,
-    (ActorFunc)BgJyaBombchuiwa_Draw,
+ActorInit Bg_Jya_Bombchuiwa_InitVars = {
+    /**/ ACTOR_BG_JYA_BOMBCHUIWA,
+    /**/ ACTORCAT_BG,
+    /**/ FLAGS,
+    /**/ OBJECT_JYA_OBJ,
+    /**/ sizeof(BgJyaBombchuiwa),
+    /**/ BgJyaBombchuiwa_Init,
+    /**/ BgJyaBombchuiwa_Destroy,
+    /**/ BgJyaBombchuiwa_Update,
+    /**/ BgJyaBombchuiwa_Draw,
 };
 
 static ColliderJntSphElementInit sJntSphElementsInit[1] = {

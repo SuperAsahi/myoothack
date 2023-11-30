@@ -14,16 +14,16 @@ void ObjHamishi_Destroy(Actor* thisx, PlayState* play2);
 void ObjHamishi_Update(Actor* thisx, PlayState* play);
 void ObjHamishi_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit Obj_Hamishi_InitVars = {
-    ACTOR_OBJ_HAMISHI,
-    ACTORCAT_PROP,
-    FLAGS,
-    OBJECT_GAMEPLAY_FIELD_KEEP,
-    sizeof(ObjHamishi),
-    (ActorFunc)ObjHamishi_Init,
-    (ActorFunc)ObjHamishi_Destroy,
-    (ActorFunc)ObjHamishi_Update,
-    (ActorFunc)ObjHamishi_Draw,
+ActorInit Obj_Hamishi_InitVars = {
+    /**/ ACTOR_OBJ_HAMISHI,
+    /**/ ACTORCAT_PROP,
+    /**/ FLAGS,
+    /**/ OBJECT_GAMEPLAY_FIELD_KEEP,
+    /**/ sizeof(ObjHamishi),
+    /**/ ObjHamishi_Init,
+    /**/ ObjHamishi_Destroy,
+    /**/ ObjHamishi_Update,
+    /**/ ObjHamishi_Draw,
 };
 
 static ColliderCylinderInit sCylinderInit = {

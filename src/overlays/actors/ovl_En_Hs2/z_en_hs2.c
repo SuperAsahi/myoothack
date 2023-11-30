@@ -5,7 +5,7 @@
  */
 
 #include "z_en_hs2.h"
-#include "vt.h"
+#include "terminal.h"
 #include "assets/objects/object_hs/object_hs.h"
 
 #define FLAGS (ACTOR_FLAG_0 | ACTOR_FLAG_3)
@@ -16,16 +16,16 @@ void EnHs2_Update(Actor* thisx, PlayState* play);
 void EnHs2_Draw(Actor* thisx, PlayState* play);
 void func_80A6F1A4(EnHs2* this, PlayState* play);
 
-const ActorInit En_Hs2_InitVars = {
-    ACTOR_EN_HS2,
-    ACTORCAT_NPC,
-    FLAGS,
-    OBJECT_HS,
-    sizeof(EnHs2),
-    (ActorFunc)EnHs2_Init,
-    (ActorFunc)EnHs2_Destroy,
-    (ActorFunc)EnHs2_Update,
-    (ActorFunc)EnHs2_Draw,
+ActorInit En_Hs2_InitVars = {
+    /**/ ACTOR_EN_HS2,
+    /**/ ACTORCAT_NPC,
+    /**/ FLAGS,
+    /**/ OBJECT_HS,
+    /**/ sizeof(EnHs2),
+    /**/ EnHs2_Init,
+    /**/ EnHs2_Destroy,
+    /**/ EnHs2_Update,
+    /**/ EnHs2_Draw,
 };
 
 static ColliderCylinderInit sCylinderInit = {
@@ -73,7 +73,7 @@ void EnHs2_Destroy(Actor* thisx, PlayState* play) {
 }
 
 s32 func_80A6F0B4(EnHs2* this, PlayState* play, u16 textId, EnHs2ActionFunc actionFunc) {
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         this->actionFunc = actionFunc;
         return 1;
     }
@@ -82,7 +82,7 @@ s32 func_80A6F0B4(EnHs2* this, PlayState* play, u16 textId, EnHs2ActionFunc acti
     if (ABS((s16)(this->actor.yawTowardsPlayer - this->actor.shape.rot.y)) < 0x2151 &&
         this->actor.xzDistToPlayer < 100.0f) {
         this->unk_2A8 |= 0x1;
-        func_8002F2CC(&this->actor, play, 100.0f);
+        Actor_OfferTalk(&this->actor, play, 100.0f);
     }
     return 0;
 }
@@ -111,7 +111,7 @@ void EnHs2_Update(Actor* thisx, PlayState* play) {
 
     Collider_UpdateCylinder(&this->actor, &this->collider);
     CollisionCheck_SetOC(play, &play->colChkCtx, &this->collider.base);
-    Actor_MoveForward(&this->actor);
+    Actor_MoveXZGravity(&this->actor);
     Actor_UpdateBgCheckInfo(play, &this->actor, 0.0f, 0.0f, 0.0f, UPDBGCHECKINFO_FLAG_2);
     if (SkelAnime_Update(&this->skelAnime)) {
         this->skelAnime.curFrame = 0.0f;

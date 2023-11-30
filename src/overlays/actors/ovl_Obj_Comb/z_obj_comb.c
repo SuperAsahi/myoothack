@@ -20,16 +20,16 @@ void ObjComb_ChooseItemDrop(ObjComb* this, PlayState* play);
 void ObjComb_SetupWait(ObjComb* this);
 void ObjComb_Wait(ObjComb* this, PlayState* play);
 
-const ActorInit Obj_Comb_InitVars = {
-    ACTOR_OBJ_COMB,
-    ACTORCAT_PROP,
-    FLAGS,
-    OBJECT_GAMEPLAY_FIELD_KEEP,
-    sizeof(ObjComb),
-    (ActorFunc)ObjComb_Init,
-    (ActorFunc)ObjComb_Destroy,
-    (ActorFunc)ObjComb_Update,
-    (ActorFunc)ObjComb_Draw,
+ActorInit Obj_Comb_InitVars = {
+    /**/ ACTOR_OBJ_COMB,
+    /**/ ACTORCAT_PROP,
+    /**/ FLAGS,
+    /**/ OBJECT_GAMEPLAY_FIELD_KEEP,
+    /**/ sizeof(ObjComb),
+    /**/ ObjComb_Init,
+    /**/ ObjComb_Destroy,
+    /**/ ObjComb_Update,
+    /**/ ObjComb_Draw,
 };
 
 static ColliderJntSphElementInit sJntSphElementsInit[1] = {

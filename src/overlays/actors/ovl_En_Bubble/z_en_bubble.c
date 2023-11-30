@@ -12,16 +12,16 @@ void EnBubble_Wait(EnBubble* this, PlayState* play);
 void EnBubble_Pop(EnBubble* this, PlayState* play);
 void EnBubble_Regrow(EnBubble* this, PlayState* play);
 
-const ActorInit En_Bubble_InitVars = {
-    ACTOR_EN_BUBBLE,
-    ACTORCAT_ENEMY,
-    FLAGS,
-    OBJECT_BUBBLE,
-    sizeof(EnBubble),
-    (ActorFunc)EnBubble_Init,
-    (ActorFunc)EnBubble_Destroy,
-    (ActorFunc)EnBubble_Update,
-    (ActorFunc)EnBubble_Draw,
+ActorInit En_Bubble_InitVars = {
+    /**/ ACTOR_EN_BUBBLE,
+    /**/ ACTORCAT_ENEMY,
+    /**/ FLAGS,
+    /**/ OBJECT_BUBBLE,
+    /**/ sizeof(EnBubble),
+    /**/ EnBubble_Init,
+    /**/ EnBubble_Destroy,
+    /**/ EnBubble_Update,
+    /**/ EnBubble_Draw,
 };
 
 static ColliderJntSphElementInit sJntSphElementsInit[2] = {
@@ -250,7 +250,7 @@ void EnBubble_Fly(EnBubble* this, PlayState* play) {
         this->velocityFromBounce.y = (this->bounceDirection.y * bounceSpeed);
         this->velocityFromBounce.z = (this->bounceDirection.z * bounceSpeed);
         this->sinkSpeed = 0.0f;
-        Audio_PlayActorSfx2(&this->actor, NA_SE_EN_AWA_BOUND);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_AWA_BOUND);
         this->graphicRotSpeed = 128.0f;
         this->graphicEccentricity = 0.48f;
     } else if ((this->actor.bgCheckFlags & BGCHECKFLAG_WATER) && sp54.y < 0.0f) {
@@ -269,7 +269,7 @@ void EnBubble_Fly(EnBubble* this, PlayState* play) {
         this->velocityFromBounce.y = (this->bounceDirection.y * bounceSpeed);
         this->velocityFromBounce.z = (this->bounceDirection.z * bounceSpeed);
         this->sinkSpeed = 0.0f;
-        Audio_PlayActorSfx2(&this->actor, NA_SE_EN_AWA_BOUND);
+        Actor_PlaySfx(&this->actor, NA_SE_EN_AWA_BOUND);
         this->graphicRotSpeed = 128.0f;
         this->graphicEccentricity = 0.48f;
     }
@@ -398,7 +398,7 @@ void EnBubble_Regrow(EnBubble* this, PlayState* play) {
 void EnBubble_Update(Actor* thisx, PlayState* play) {
     EnBubble* this = (EnBubble*)thisx;
 
-    func_8002D7EC(&this->actor);
+    Actor_UpdatePos(&this->actor);
     Actor_UpdateBgCheckInfo(play, &this->actor, 16.0f, 16.0f, 0.0f,
                             UPDBGCHECKINFO_FLAG_0 | UPDBGCHECKINFO_FLAG_1 | UPDBGCHECKINFO_FLAG_2);
     this->actionFunc(this, play);

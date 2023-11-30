@@ -16,16 +16,16 @@ void ObjSyokudai_Destroy(Actor* thisx, PlayState* play);
 void ObjSyokudai_Update(Actor* thisx, PlayState* play2);
 void ObjSyokudai_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit Obj_Syokudai_InitVars = {
-    ACTOR_OBJ_SYOKUDAI,
-    ACTORCAT_PROP,
-    FLAGS,
-    OBJECT_SYOKUDAI,
-    sizeof(ObjSyokudai),
-    (ActorFunc)ObjSyokudai_Init,
-    (ActorFunc)ObjSyokudai_Destroy,
-    (ActorFunc)ObjSyokudai_Update,
-    (ActorFunc)ObjSyokudai_Draw,
+ActorInit Obj_Syokudai_InitVars = {
+    /**/ ACTOR_OBJ_SYOKUDAI,
+    /**/ ACTORCAT_PROP,
+    /**/ FLAGS,
+    /**/ OBJECT_SYOKUDAI,
+    /**/ sizeof(ObjSyokudai),
+    /**/ ObjSyokudai_Init,
+    /**/ ObjSyokudai_Destroy,
+    /**/ ObjSyokudai_Update,
+    /**/ ObjSyokudai_Draw,
 };
 
 static ColliderCylinderInit sCylInitStand = {
@@ -175,7 +175,7 @@ void ObjSyokudai_Update(Actor* thisx, PlayState* play2) {
             if (dmgFlags & (DMG_FIRE | DMG_ARROW_NORMAL)) {
                 interactionType = 1;
             }
-        } else if (player->heldItemAction == PLAYER_IA_STICK) {
+        } else if (player->heldItemAction == PLAYER_IA_DEKU_STICK) {
             Math_Vec3f_Diff(&player->meleeWeaponInfo[0].tip, &this->actor.world.pos, &tipToFlame);
             tipToFlame.y -= 67.0f;
             if ((SQ(tipToFlame.x) + SQ(tipToFlame.y) + SQ(tipToFlame.z)) < SQ(20.0f)) {

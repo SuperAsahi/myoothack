@@ -17,16 +17,16 @@ void ObjIcePoly_Draw(Actor* thisx, PlayState* play);
 void ObjIcePoly_Idle(ObjIcePoly* this, PlayState* play);
 void ObjIcePoly_Melt(ObjIcePoly* this, PlayState* play);
 
-const ActorInit Obj_Ice_Poly_InitVars = {
-    ACTOR_OBJ_ICE_POLY,
-    ACTORCAT_PROP,
-    FLAGS,
-    OBJECT_GAMEPLAY_KEEP,
-    sizeof(ObjIcePoly),
-    (ActorFunc)ObjIcePoly_Init,
-    (ActorFunc)ObjIcePoly_Destroy,
-    (ActorFunc)ObjIcePoly_Update,
-    (ActorFunc)ObjIcePoly_Draw,
+ActorInit Obj_Ice_Poly_InitVars = {
+    /**/ ACTOR_OBJ_ICE_POLY,
+    /**/ ACTORCAT_PROP,
+    /**/ FLAGS,
+    /**/ OBJECT_GAMEPLAY_KEEP,
+    /**/ sizeof(ObjIcePoly),
+    /**/ ObjIcePoly_Init,
+    /**/ ObjIcePoly_Destroy,
+    /**/ ObjIcePoly_Update,
+    /**/ ObjIcePoly_Draw,
 };
 
 static ColliderCylinderInit sCylinderInitIce = {
@@ -167,7 +167,7 @@ void ObjIcePoly_Melt(ObjIcePoly* this, PlayState* play) {
         this->meltTimer++;
         if (this->meltTimer == 0) {
             this->meltTimer = 40;
-            Audio_PlayActorSfx2(&this->actor, NA_SE_EV_ICE_MELT);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_ICE_MELT);
         }
     } else {
         if (this->meltTimer != 0) {

@@ -6,7 +6,7 @@
 
 #include "z_bg_jya_zurerukabe.h"
 #include "assets/objects/object_jya_obj/object_jya_obj.h"
-#include "vt.h"
+#include "terminal.h"
 
 #define FLAGS ACTOR_FLAG_4
 
@@ -23,16 +23,16 @@ void func_8089B870(BgJyaZurerukabe* this, PlayState* play);
 
 static f32 D_8089B9C0[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
-const ActorInit Bg_Jya_Zurerukabe_InitVars = {
-    ACTOR_BG_JYA_ZURERUKABE,
-    ACTORCAT_BG,
-    FLAGS,
-    OBJECT_JYA_OBJ,
-    sizeof(BgJyaZurerukabe),
-    (ActorFunc)BgJyaZurerukabe_Init,
-    (ActorFunc)BgJyaZurerukabe_Destroy,
-    (ActorFunc)BgJyaZurerukabe_Update,
-    (ActorFunc)BgJyaZurerukabe_Draw,
+ActorInit Bg_Jya_Zurerukabe_InitVars = {
+    /**/ ACTOR_BG_JYA_ZURERUKABE,
+    /**/ ACTORCAT_BG,
+    /**/ FLAGS,
+    /**/ OBJECT_JYA_OBJ,
+    /**/ sizeof(BgJyaZurerukabe),
+    /**/ BgJyaZurerukabe_Init,
+    /**/ BgJyaZurerukabe_Destroy,
+    /**/ BgJyaZurerukabe_Update,
+    /**/ BgJyaZurerukabe_Draw,
 };
 
 static s16 D_8089B9F0[4] = { 943, 1043, 1243, 1343 };

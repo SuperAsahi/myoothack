@@ -7,7 +7,7 @@
 #include "z_bg_jya_bombiwa.h"
 #include "overlays/effects/ovl_Effect_Ss_Kakera/z_eff_ss_kakera.h"
 #include "assets/objects/object_jya_obj/object_jya_obj.h"
-#include "vt.h"
+#include "terminal.h"
 
 #define FLAGS 0
 
@@ -16,16 +16,16 @@ void BgJyaBombiwa_Destroy(Actor* thisx, PlayState* play);
 void BgJyaBombiwa_Update(Actor* thisx, PlayState* play);
 void BgJyaBombiwa_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit Bg_Jya_Bombiwa_InitVars = {
-    ACTOR_BG_JYA_BOMBIWA,
-    ACTORCAT_BG,
-    FLAGS,
-    OBJECT_JYA_OBJ,
-    sizeof(BgJyaBombiwa),
-    (ActorFunc)BgJyaBombiwa_Init,
-    (ActorFunc)BgJyaBombiwa_Destroy,
-    (ActorFunc)BgJyaBombiwa_Update,
-    (ActorFunc)BgJyaBombiwa_Draw,
+ActorInit Bg_Jya_Bombiwa_InitVars = {
+    /**/ ACTOR_BG_JYA_BOMBIWA,
+    /**/ ACTORCAT_BG,
+    /**/ FLAGS,
+    /**/ OBJECT_JYA_OBJ,
+    /**/ sizeof(BgJyaBombiwa),
+    /**/ BgJyaBombiwa_Init,
+    /**/ BgJyaBombiwa_Destroy,
+    /**/ BgJyaBombiwa_Update,
+    /**/ BgJyaBombiwa_Draw,
 };
 
 static ColliderJntSphElementInit sJntSphElementsInit[] = {

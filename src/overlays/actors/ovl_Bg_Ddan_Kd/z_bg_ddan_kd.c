@@ -18,16 +18,16 @@ void BgDdanKd_CheckForExplosions(BgDdanKd* this, PlayState* play);
 void BgDdanKd_LowerStairs(BgDdanKd* this, PlayState* play);
 void BgDdanKd_DoNothing(BgDdanKd* this, PlayState* play);
 
-const ActorInit Bg_Ddan_Kd_InitVars = {
-    ACTOR_BG_DDAN_KD,
-    ACTORCAT_BG,
-    FLAGS,
-    OBJECT_DDAN_OBJECTS,
-    sizeof(BgDdanKd),
-    (ActorFunc)BgDdanKd_Init,
-    (ActorFunc)BgDdanKd_Destroy,
-    (ActorFunc)BgDdanKd_Update,
-    (ActorFunc)BgDdanKd_Draw,
+ActorInit Bg_Ddan_Kd_InitVars = {
+    /**/ ACTOR_BG_DDAN_KD,
+    /**/ ACTORCAT_BG,
+    /**/ FLAGS,
+    /**/ OBJECT_DDAN_OBJECTS,
+    /**/ sizeof(BgDdanKd),
+    /**/ BgDdanKd_Init,
+    /**/ BgDdanKd_Destroy,
+    /**/ BgDdanKd_Update,
+    /**/ BgDdanKd_Draw,
 };
 
 static ColliderCylinderInit sCylinderInit = {
@@ -126,16 +126,15 @@ void BgDdanKd_LowerStairs(BgDdanKd* this, PlayState* play) {
     Vec3f pos2;
     f32 effectStrength;
 
-    Math_SmoothStepToF(&this->dyna.actor.speedXZ, 4.0f, 0.5f, 0.025f, 0.0f);
+    Math_SmoothStepToF(&this->dyna.actor.speed, 4.0f, 0.5f, 0.025f, 0.0f);
     Rumble_Request(500.0f, 120, 20, 10);
 
     if (Math_SmoothStepToF(&this->dyna.actor.world.pos.y, this->dyna.actor.home.pos.y - 200.0f - 20.0f, 0.075f,
-                           this->dyna.actor.speedXZ, 0.0075f) == 0.0f) {
+                           this->dyna.actor.speed, 0.0075f) == 0.0f) {
         Flags_SetSwitch(play, this->dyna.actor.params);
         BgDdanKd_SetupAction(this, BgDdanKd_DoNothing);
     } else {
-        effectStrength =
-            (this->dyna.actor.prevPos.y - this->dyna.actor.world.pos.y) + (this->dyna.actor.speedXZ * 0.25f);
+        effectStrength = (this->dyna.actor.prevPos.y - this->dyna.actor.world.pos.y) + (this->dyna.actor.speed * 0.25f);
 
         if (play->state.frames & 1) {
             pos1 = pos2 = this->dyna.actor.world.pos;

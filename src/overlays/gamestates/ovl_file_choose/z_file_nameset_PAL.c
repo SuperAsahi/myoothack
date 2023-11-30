@@ -1,4 +1,5 @@
 #include "file_select.h"
+#include "terminal.h"
 #include "assets/textures/title_static/title_static.h"
 #include "assets/overlays/ovl_File_Choose/ovl_file_choose.h"
 
@@ -115,9 +116,6 @@ void FileSelect_SetNameEntryVtx(GameState* thisx) {
     s16 phi_t1;
     u8 temp;
     s16 phi_v0;
-
-    if (1) {}
-    if (1) {}
 
     OPEN_DISPS(this->state.gfxCtx, "../z_file_nameset_PAL.c", 205);
 
@@ -440,9 +438,9 @@ void FileSelect_DrawNameEntry(GameState* thisx) {
                                                  &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                                                  &gSfxDefaultReverb);
                             gSaveContext.fileNum = this->buttonIndex;
-                            dayTime = ((void)0, gSaveContext.dayTime);
+                            dayTime = ((void)0, gSaveContext.save.dayTime);
                             Sram_InitSave(this, &this->sramCtx);
-                            gSaveContext.dayTime = dayTime;
+                            gSaveContext.save.dayTime = dayTime;
                             this->configMode = CM_NAME_ENTRY_TO_MAIN;
                             this->nameBoxAlpha[this->buttonIndex] = this->nameAlpha[this->buttonIndex] = 200;
                             this->connectorAlpha[this->buttonIndex] = 255;
@@ -563,7 +561,7 @@ void FileSelect_UpdateKeyboardCursor(GameState* thisx) {
         this->kbdY--;
 
         if (this->kbdY < 0) {
-            // dont go to bottom row
+            // don't go to bottom row
             if (this->kbdX < 8) {
                 this->kbdY = 4;
                 this->charIndex = (s32)(this->kbdX + 52);
@@ -919,6 +917,8 @@ void FileSelect_DrawOptionsImpl(GameState* thisx) {
             gDPSetEnvColor(POLY_OPA_DISP++, 0, 0, 0, 255);
         }
 
+        //! @bug Mistakenly using sOptionsMenuHeaders instead of sOptionsMenuSettings for the height.
+        //! This works out anyway because all heights are 16.
         gDPLoadTextureBlock(POLY_OPA_DISP++, sOptionsMenuSettings[i].texture[gSaveContext.language], G_IM_FMT_IA,
                             G_IM_SIZ_8b, sOptionsMenuSettings[i].width[gSaveContext.language],
                             sOptionsMenuHeaders[i].height, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP,
@@ -943,6 +943,9 @@ void FileSelect_DrawOptionsImpl(GameState* thisx) {
             gDPSetEnvColor(POLY_OPA_DISP++, 0, 0, 0, 255);
         }
 
+        //! @bug Mistakenly using sOptionsMenuHeaders instead of sOptionsMenuSettings for the height.
+        //! This is also an OOB read that happens to access the height of the first two elements in
+        //! sOptionsMenuSettings, and since all heights are 16, it works out anyway.
         gDPLoadTextureBlock(POLY_OPA_DISP++, sOptionsMenuSettings[i].texture[gSaveContext.language], G_IM_FMT_IA,
                             G_IM_SIZ_8b, sOptionsMenuSettings[i].width[gSaveContext.language],
                             sOptionsMenuHeaders[i].height, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP,

@@ -21,16 +21,16 @@ void func_8089993C(BgJyaKanaami* this);
 void func_80899950(BgJyaKanaami* this, PlayState* play);
 void func_80899A08(BgJyaKanaami* this);
 
-const ActorInit Bg_Jya_Kanaami_InitVars = {
-    ACTOR_BG_JYA_KANAAMI,
-    ACTORCAT_BG,
-    FLAGS,
-    OBJECT_JYA_OBJ,
-    sizeof(BgJyaKanaami),
-    (ActorFunc)BgJyaKanaami_Init,
-    (ActorFunc)BgJyaKanaami_Destroy,
-    (ActorFunc)BgJyaKanaami_Update,
-    (ActorFunc)BgJyaKanaami_Draw,
+ActorInit Bg_Jya_Kanaami_InitVars = {
+    /**/ ACTOR_BG_JYA_KANAAMI,
+    /**/ ACTORCAT_BG,
+    /**/ FLAGS,
+    /**/ OBJECT_JYA_OBJ,
+    /**/ sizeof(BgJyaKanaami),
+    /**/ BgJyaKanaami_Init,
+    /**/ BgJyaKanaami_Destroy,
+    /**/ BgJyaKanaami_Update,
+    /**/ BgJyaKanaami_Draw,
 };
 
 static InitChainEntry sInitChain[] = {
@@ -83,8 +83,8 @@ void func_80899894(BgJyaKanaami* this, PlayState* play) {
         if (this->dyna.actor.world.pos.x > -1000.0f && this->unk_16A == 0) {
             OnePointCutscene_Init(play, 3450, -99, &this->dyna.actor, CAM_ID_MAIN);
         }
-        this->unk_16A += 1;
-        if (this->unk_16A >= 0xA) {
+        this->unk_16A++;
+        if (this->unk_16A >= 10) {
             func_8089993C(this);
         }
     }
@@ -102,7 +102,7 @@ void func_80899950(BgJyaKanaami* this, PlayState* play) {
     this->unk_168 += 0x20;
     if (Math_ScaledStepToS(&this->dyna.actor.world.rot.x, 0x4000, this->unk_168)) {
         func_80899A08(this);
-        Audio_PlayActorSfx2(&this->dyna.actor, NA_SE_EV_TRAP_BOUND);
+        Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_TRAP_BOUND);
 
         quakeIndex = Quake_Request(GET_ACTIVE_CAM(play), QUAKE_TYPE_3);
         Quake_SetSpeed(quakeIndex, 25000);

@@ -19,16 +19,16 @@ void BgMizuBwall_Idle(BgMizuBwall* this, PlayState* play);
 void BgMizuBwall_Break(BgMizuBwall* this, PlayState* play);
 void BgMizuBwall_DoNothing(BgMizuBwall* this, PlayState* play);
 
-const ActorInit Bg_Mizu_Bwall_InitVars = {
-    ACTOR_BG_MIZU_BWALL,
-    ACTORCAT_BG,
-    FLAGS,
-    OBJECT_MIZU_OBJECTS,
-    sizeof(BgMizuBwall),
-    (ActorFunc)BgMizuBwall_Init,
-    (ActorFunc)BgMizuBwall_Destroy,
-    (ActorFunc)BgMizuBwall_Update,
-    (ActorFunc)BgMizuBwall_Draw,
+ActorInit Bg_Mizu_Bwall_InitVars = {
+    /**/ ACTOR_BG_MIZU_BWALL,
+    /**/ ACTORCAT_BG,
+    /**/ FLAGS,
+    /**/ OBJECT_MIZU_OBJECTS,
+    /**/ sizeof(BgMizuBwall),
+    /**/ BgMizuBwall_Init,
+    /**/ BgMizuBwall_Destroy,
+    /**/ BgMizuBwall_Update,
+    /**/ BgMizuBwall_Draw,
 };
 
 static ColliderTrisElementInit sTrisElementInitFloor[2] = {
@@ -470,7 +470,7 @@ void BgMizuBwall_Idle(BgMizuBwall* this, PlayState* play) {
         DynaPoly_DisableCollision(play, &play->colCtx.dyna, this->dyna.bgId);
         this->dList = NULL;
         BgMizuBwall_SpawnDebris(this, play);
-        Audio_PlayActorSfx2(&this->dyna.actor, NA_SE_EV_WALL_BROKEN);
+        Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_WALL_BROKEN);
         Audio_PlaySfxGeneral(NA_SE_SY_CORRECT_CHIME, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
                              &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
         this->actionFunc = BgMizuBwall_Break;

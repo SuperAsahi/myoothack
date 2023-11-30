@@ -68,16 +68,13 @@ void Lights_Draw(Lights* lights, GraphicsContext* gfxCtx) {
     light = &lights->l.l[0];
 
     while (i < lights->numLights) {
-        i++;
-        gSPLight(POLY_OPA_DISP++, light, i);
+        gSPLight(POLY_OPA_DISP++, light, ++i);
         gSPLight(POLY_XLU_DISP++, light, i);
         light++;
     }
 
-    if (0) {}
-
-    i++; // ambient light is total number of lights + 1
-    gSPLight(POLY_OPA_DISP++, &lights->l.a, i);
+    // ambient light is total number of lights + 1
+    gSPLight(POLY_OPA_DISP++, &lights->l.a, ++i);
     gSPLight(POLY_XLU_DISP++, &lights->l.a, i);
 
     CLOSE_DISPS(gfxCtx, "../z_lights.c", 352);
@@ -111,7 +108,7 @@ void Lights_BindPoint(Lights* lights, LightParams* params, Vec3f* vec) {
 
             if (light != NULL) {
                 posDiff = sqrtf(posDiff);
-                if (1) {}
+
                 scale = posDiff / scale;
                 scale = 1 - SQ(scale);
 
@@ -198,7 +195,7 @@ s32 Lights_FreeNode(LightNode* light) {
 void LightContext_Init(PlayState* play, LightContext* lightCtx) {
     LightContext_InitList(play, lightCtx);
     LightContext_SetAmbientColor(lightCtx, 80, 80, 80);
-    LightContext_SetFog(lightCtx, 0, 0, 0, 996, 12800);
+    LightContext_SetFog(lightCtx, 0, 0, 0, ENV_FOGNEAR_MAX, ENV_ZFAR_MAX);
     bzero(&sLightsBuffer, sizeof(sLightsBuffer));
 }
 
@@ -208,12 +205,12 @@ void LightContext_SetAmbientColor(LightContext* lightCtx, u8 r, u8 g, u8 b) {
     lightCtx->ambientColor[2] = b;
 }
 
-void LightContext_SetFog(LightContext* lightCtx, u8 r, u8 g, u8 b, s16 fogNear, s16 fogFar) {
+void LightContext_SetFog(LightContext* lightCtx, u8 r, u8 g, u8 b, s16 fogNear, s16 zFar) {
     lightCtx->fogColor[0] = r;
     lightCtx->fogColor[1] = g;
     lightCtx->fogColor[2] = b;
     lightCtx->fogNear = fogNear;
-    lightCtx->fogFar = fogFar;
+    lightCtx->zFar = zFar;
 }
 
 /**
@@ -342,11 +339,18 @@ void Lights_GlowCheck(PlayState* play) {
             wY = multDest.y * cappedInvWDest;
 
             if ((multDest.z > 1.0f) && (fabsf(wX) < 1.0f) && (fabsf(wY) < 1.0f)) {
-                wZ = (s32)((multDest.z * cappedInvWDest) * 16352.0f) + 16352;
-                zBuf = gZBuffer[(s32)((wY * -120.0f) + 120.0f)][(s32)((wX * 160.0f) + 160.0f)] * 4;
+                // Compute screen z value assuming the viewport scale and translation both have value G_MAXZ / 2
+                // The multiplication by 32 follows from how the RSP microcode computes the screen z value.
+                wZ = (s32)((multDest.z * cappedInvWDest) * ((G_MAXZ / 2) * 32)) + ((G_MAXZ / 2) * 32);
+                // Obtain the z-buffer value for the screen pixel corresponding to the center of the glow.
+                zBuf = gZBuffer[(s32)((wY * -(SCREEN_HEIGHT / 2)) + (SCREEN_HEIGHT / 2))]
+                               [(s32)((wX * (SCREEN_WIDTH / 2)) + (SCREEN_WIDTH / 2))]
+                       << 2;
                 if (1) {}
                 if (1) {}
 
+                // Compare the computed screen z value to the integer part of the z-buffer value in fixed point. If
+                // it is less than the value from the z-buffer the depth test passes and the glow can draw.
                 if (wZ < (Environment_ZBufValToFixedPoint(zBuf) >> 3)) {
                     params->drawGlow = true;
                 }

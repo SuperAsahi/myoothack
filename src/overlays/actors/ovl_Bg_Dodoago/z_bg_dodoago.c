@@ -20,16 +20,16 @@ void BgDodoago_OpenJaw(BgDodoago* this, PlayState* play);
 void BgDodoago_DoNothing(BgDodoago* this, PlayState* play);
 void BgDodoago_LightOneEye(BgDodoago* this, PlayState* play);
 
-const ActorInit Bg_Dodoago_InitVars = {
-    ACTOR_BG_DODOAGO,
-    ACTORCAT_BG,
-    FLAGS,
-    OBJECT_DDAN_OBJECTS,
-    sizeof(BgDodoago),
-    (ActorFunc)BgDodoago_Init,
-    (ActorFunc)BgDodoago_Destroy,
-    (ActorFunc)BgDodoago_Update,
-    (ActorFunc)BgDodoago_Draw,
+ActorInit Bg_Dodoago_InitVars = {
+    /**/ ACTOR_BG_DODOAGO,
+    /**/ ACTORCAT_BG,
+    /**/ FLAGS,
+    /**/ OBJECT_DDAN_OBJECTS,
+    /**/ sizeof(BgDodoago),
+    /**/ BgDodoago_Init,
+    /**/ BgDodoago_Destroy,
+    /**/ BgDodoago_Update,
+    /**/ BgDodoago_Draw,
 };
 
 static ColliderCylinderInit sColCylinderInitMain = {
@@ -290,7 +290,7 @@ void BgDodoago_Update(Actor* thisx, PlayState* play) {
                 // disable the bomb catcher for a few seconds
                 this->dyna.actor.parent = &bomb->actor;
                 bomb->timer = 50;
-                bomb->actor.speedXZ = 0.0f;
+                bomb->actor.speed = 0.0f;
                 sTimer = 0;
             }
         }

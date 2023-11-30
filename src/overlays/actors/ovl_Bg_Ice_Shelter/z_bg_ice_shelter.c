@@ -23,16 +23,16 @@ void BgIceShelter_SetupMelt(BgIceShelter* this);
 void BgIceShelter_Idle(BgIceShelter* this, PlayState* play);
 void BgIceShelter_Melt(BgIceShelter* this, PlayState* play);
 
-const ActorInit Bg_Ice_Shelter_InitVars = {
-    ACTOR_BG_ICE_SHELTER,
-    ACTORCAT_BG,
-    FLAGS,
-    OBJECT_ICE_OBJECTS,
-    sizeof(BgIceShelter),
-    (ActorFunc)BgIceShelter_Init,
-    (ActorFunc)BgIceShelter_Destroy,
-    (ActorFunc)BgIceShelter_Update,
-    (ActorFunc)BgIceShelter_Draw,
+ActorInit Bg_Ice_Shelter_InitVars = {
+    /**/ ACTOR_BG_ICE_SHELTER,
+    /**/ ACTORCAT_BG,
+    /**/ FLAGS,
+    /**/ OBJECT_ICE_OBJECTS,
+    /**/ sizeof(BgIceShelter),
+    /**/ BgIceShelter_Init,
+    /**/ BgIceShelter_Destroy,
+    /**/ BgIceShelter_Update,
+    /**/ BgIceShelter_Draw,
 };
 
 static f32 sRedIceScales[] = { 0.1f, 0.06f, 0.1f, 0.1f, 0.25f };
@@ -349,7 +349,7 @@ void BgIceShelter_Idle(BgIceShelter* this, PlayState* play) {
             }
 
             BgIceShelter_SetupMelt(this);
-            Audio_PlayActorSfx2(&this->dyna.actor, NA_SE_EV_ICE_MELT);
+            Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_ICE_MELT);
         }
     }
 
@@ -432,7 +432,7 @@ void BgIceShelter_Melt(BgIceShelter* this, PlayState* play) {
         }
 
         if (type == RED_ICE_KING_ZORA) {
-            func_80078884(NA_SE_SY_CORRECT_CHIME);
+            Sfx_PlaySfxCentered(NA_SE_SY_CORRECT_CHIME);
         }
 
         Actor_Kill(&this->dyna.actor);

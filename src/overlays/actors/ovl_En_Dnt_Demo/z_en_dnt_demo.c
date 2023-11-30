@@ -8,7 +8,7 @@
 
 #include "overlays/actors/ovl_En_Dnt_Jiji/z_en_dnt_jiji.h"
 #include "overlays/actors/ovl_En_Dnt_Nomal/z_en_dnt_nomal.h"
-#include "vt.h"
+#include "terminal.h"
 
 #define FLAGS 0
 
@@ -26,16 +26,16 @@ void EnDntDemo_Judge(EnDntDemo* this, PlayState* play);
 void EnDntDemo_Results(EnDntDemo* this, PlayState* play);
 void EnDntDemo_Prize(EnDntDemo* this, PlayState* play);
 
-const ActorInit En_Dnt_Demo_InitVars = {
-    ACTOR_EN_DNT_DEMO,
-    ACTORCAT_PROP,
-    FLAGS,
-    OBJECT_GAMEPLAY_KEEP,
-    sizeof(EnDntDemo),
-    (ActorFunc)EnDntDemo_Init,
-    (ActorFunc)EnDntDemo_Destroy,
-    (ActorFunc)EnDntDemo_Update,
-    NULL,
+ActorInit En_Dnt_Demo_InitVars = {
+    /**/ ACTOR_EN_DNT_DEMO,
+    /**/ ACTORCAT_PROP,
+    /**/ FLAGS,
+    /**/ OBJECT_GAMEPLAY_KEEP,
+    /**/ sizeof(EnDntDemo),
+    /**/ EnDntDemo_Init,
+    /**/ EnDntDemo_Destroy,
+    /**/ EnDntDemo_Update,
+    /**/ NULL,
 };
 
 //! @bug

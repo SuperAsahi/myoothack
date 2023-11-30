@@ -5,7 +5,7 @@
  */
 
 #include "z_en_weather_tag.h"
-#include "vt.h"
+#include "terminal.h"
 
 #define FLAGS ACTOR_FLAG_4
 
@@ -31,16 +31,16 @@ void EnWeatherTag_EnabledRainThunder(EnWeatherTag* this, PlayState* play);
 
 #define WEATHER_TAG_RANGE100(x) ((x >> 8) * 100.0f)
 
-const ActorInit En_Weather_Tag_InitVars = {
-    ACTOR_EN_WEATHER_TAG,
-    ACTORCAT_PROP,
-    FLAGS,
-    OBJECT_GAMEPLAY_KEEP,
-    sizeof(EnWeatherTag),
-    (ActorFunc)EnWeatherTag_Init,
-    (ActorFunc)EnWeatherTag_Destroy,
-    (ActorFunc)EnWeatherTag_Update,
-    NULL,
+ActorInit En_Weather_Tag_InitVars = {
+    /**/ ACTOR_EN_WEATHER_TAG,
+    /**/ ACTORCAT_PROP,
+    /**/ FLAGS,
+    /**/ OBJECT_GAMEPLAY_KEEP,
+    /**/ sizeof(EnWeatherTag),
+    /**/ EnWeatherTag_Init,
+    /**/ EnWeatherTag_Destroy,
+    /**/ EnWeatherTag_Update,
+    /**/ NULL,
 };
 
 void EnWeatherTag_SetupAction(EnWeatherTag* this, EnWeatherTagActionFunc actionFunc) {
@@ -160,7 +160,7 @@ u8 WeatherTag_CheckEnableWeatherEffect(EnWeatherTag* this, PlayState* play, u8 s
             }
         } else {
             if (gTimeSpeed != 0) {
-                gSaveContext.dayTime += 20;
+                gSaveContext.save.dayTime += 20;
             }
         }
     }
@@ -197,7 +197,7 @@ u8 WeatherTag_CheckRestoreWeather(EnWeatherTag* this, PlayState* play, u8 skybox
                 ret = true;
             }
         } else if (gTimeSpeed != 0) {
-            gSaveContext.dayTime += 20;
+            gSaveContext.save.dayTime += 20;
         }
     }
     return ret;
@@ -291,11 +291,11 @@ void EnWeatherTag_SetSandstormIntensity(EnWeatherTag* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
     if (Actor_WorldDistXZToActor(&player->actor, &this->actor) < WEATHER_TAG_RANGE100(this->actor.params)) {
-        Math_SmoothStepToS(&play->envCtx.adjFogNear, -0x50, 1, 2, 1);
-        Math_SmoothStepToS(&play->envCtx.adjFogFar, -0x7D0, 1, 50, 1);
+        Math_SmoothStepToS(&play->envCtx.adjFogNear, -80, 1, 2, 1);
+        Math_SmoothStepToS(&play->envCtx.adjZFar, -2000, 1, 50, 1);
     } else {
         Math_SmoothStepToS(&play->envCtx.adjFogNear, 0, 1, 1, 1);
-        Math_SmoothStepToS(&play->envCtx.adjFogFar, 0, 1, 25, 1);
+        Math_SmoothStepToS(&play->envCtx.adjZFar, 0, 1, 25, 1);
     }
 }
 

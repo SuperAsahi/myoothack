@@ -5,7 +5,7 @@
  */
 
 #include "z_oceff_wipe.h"
-#include "vt.h"
+#include "terminal.h"
 
 #define FLAGS (ACTOR_FLAG_4 | ACTOR_FLAG_25)
 
@@ -14,16 +14,16 @@ void OceffWipe_Destroy(Actor* thisx, PlayState* play);
 void OceffWipe_Update(Actor* thisx, PlayState* play);
 void OceffWipe_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit Oceff_Wipe_InitVars = {
-    ACTOR_OCEFF_WIPE,
-    ACTORCAT_ITEMACTION,
-    FLAGS,
-    OBJECT_GAMEPLAY_KEEP,
-    sizeof(OceffWipe),
-    (ActorFunc)OceffWipe_Init,
-    (ActorFunc)OceffWipe_Destroy,
-    (ActorFunc)OceffWipe_Update,
-    (ActorFunc)OceffWipe_Draw,
+ActorInit Oceff_Wipe_InitVars = {
+    /**/ ACTOR_OCEFF_WIPE,
+    /**/ ACTORCAT_ITEMACTION,
+    /**/ FLAGS,
+    /**/ OBJECT_GAMEPLAY_KEEP,
+    /**/ sizeof(OceffWipe),
+    /**/ OceffWipe_Init,
+    /**/ OceffWipe_Destroy,
+    /**/ OceffWipe_Update,
+    /**/ OceffWipe_Draw,
 };
 
 void OceffWipe_Init(Actor* thisx, PlayState* play) {
@@ -75,7 +75,7 @@ void OceffWipe_Draw(Actor* thisx, PlayState* play) {
     Vec3f quakeOffset;
 
     eye = GET_ACTIVE_CAM(play)->eye;
-    Camera_GetQuakeOffset(&quakeOffset, GET_ACTIVE_CAM(play));
+    quakeOffset = Camera_GetQuakeOffset(GET_ACTIVE_CAM(play));
 
     OPEN_DISPS(play->state.gfxCtx, "../z_oceff_wipe.c", 346);
 

@@ -16,16 +16,16 @@ void EnSkjneedle_Draw(Actor* thisx, PlayState* play);
 
 s32 EnSkjNeedle_CollisionCheck(EnSkjneedle* this);
 
-const ActorInit En_Skjneedle_InitVars = {
-    ACTOR_EN_SKJNEEDLE,
-    ACTORCAT_ENEMY,
-    FLAGS,
-    OBJECT_SKJ,
-    sizeof(EnSkjneedle),
-    (ActorFunc)EnSkjneedle_Init,
-    (ActorFunc)EnSkjneedle_Destroy,
-    (ActorFunc)EnSkjneedle_Update,
-    (ActorFunc)EnSkjneedle_Draw,
+ActorInit En_Skjneedle_InitVars = {
+    /**/ ACTOR_EN_SKJNEEDLE,
+    /**/ ACTORCAT_ENEMY,
+    /**/ FLAGS,
+    /**/ OBJECT_SKJ,
+    /**/ sizeof(EnSkjneedle),
+    /**/ EnSkjneedle_Init,
+    /**/ EnSkjneedle_Destroy,
+    /**/ EnSkjneedle_Update,
+    /**/ EnSkjneedle_Draw,
 };
 
 static ColliderCylinderInitType1 sCylinderInit = {
@@ -92,7 +92,7 @@ void EnSkjneedle_Update(Actor* thisx, PlayState* play2) {
         Collider_UpdateCylinder(&this->actor, &this->collider);
         CollisionCheck_SetAT(play, &play->colChkCtx, &this->collider.base);
         CollisionCheck_SetOC(play, &play->colChkCtx, &this->collider.base);
-        Actor_MoveForward(&this->actor);
+        Actor_MoveXZGravity(&this->actor);
         Actor_UpdateBgCheckInfo(play, &this->actor, 20.0f, 20.0f, 20.0f,
                                 UPDBGCHECKINFO_FLAG_0 | UPDBGCHECKINFO_FLAG_1 | UPDBGCHECKINFO_FLAG_2);
     }

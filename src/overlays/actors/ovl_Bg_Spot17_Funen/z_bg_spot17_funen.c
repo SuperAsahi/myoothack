@@ -15,16 +15,16 @@ void BgSpot17Funen_Update(Actor* thisx, PlayState* play);
 void func_808B746C(Actor* thisx, PlayState* play);
 void func_808B7478(Actor* thisx, PlayState* play);
 
-const ActorInit Bg_Spot17_Funen_InitVars = {
-    ACTOR_BG_SPOT17_FUNEN,
-    ACTORCAT_SWITCH,
-    FLAGS,
-    OBJECT_SPOT17_OBJ,
-    sizeof(BgSpot17Funen),
-    (ActorFunc)BgSpot17Funen_Init,
-    (ActorFunc)BgSpot17Funen_Destroy,
-    (ActorFunc)BgSpot17Funen_Update,
-    NULL,
+ActorInit Bg_Spot17_Funen_InitVars = {
+    /**/ ACTOR_BG_SPOT17_FUNEN,
+    /**/ ACTORCAT_SWITCH,
+    /**/ FLAGS,
+    /**/ OBJECT_SPOT17_OBJ,
+    /**/ sizeof(BgSpot17Funen),
+    /**/ BgSpot17Funen_Init,
+    /**/ BgSpot17Funen_Destroy,
+    /**/ BgSpot17Funen_Update,
+    /**/ NULL,
 };
 
 static InitChainEntry sInitChain[] = {

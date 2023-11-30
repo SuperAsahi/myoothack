@@ -25,16 +25,16 @@ void func_8089E318(BgMizuMovebg* this, PlayState* play);
 void func_8089E650(BgMizuMovebg* this, PlayState* play);
 s32 func_8089E108(Path* pathList, Vec3f* pos, s32 pathId, s32 pointId);
 
-const ActorInit Bg_Mizu_Movebg_InitVars = {
-    ACTOR_BG_MIZU_MOVEBG,
-    ACTORCAT_BG,
-    FLAGS,
-    OBJECT_MIZU_OBJECTS,
-    sizeof(BgMizuMovebg),
-    (ActorFunc)BgMizuMovebg_Init,
-    (ActorFunc)BgMizuMovebg_Destroy,
-    (ActorFunc)BgMizuMovebg_Update,
-    (ActorFunc)BgMizuMovebg_Draw,
+ActorInit Bg_Mizu_Movebg_InitVars = {
+    /**/ ACTOR_BG_MIZU_MOVEBG,
+    /**/ ACTORCAT_BG,
+    /**/ FLAGS,
+    /**/ OBJECT_MIZU_OBJECTS,
+    /**/ sizeof(BgMizuMovebg),
+    /**/ BgMizuMovebg_Init,
+    /**/ BgMizuMovebg_Destroy,
+    /**/ BgMizuMovebg_Update,
+    /**/ BgMizuMovebg_Draw,
 };
 
 static f32 D_8089EB40[] = { -115.200005f, -115.200005f, -115.200005f, 0.0f };
@@ -322,14 +322,14 @@ void func_8089E650(BgMizuMovebg* this, PlayState* play) {
     f32 dy;
     f32 dz;
 
-    this->dyna.actor.speedXZ = MOVEBG_SPEED(this->dyna.actor.params) * 0.1f;
+    this->dyna.actor.speed = MOVEBG_SPEED(this->dyna.actor.params) * 0.1f;
     func_8089E108(play->pathList, &waypoint, MOVEBG_PATH_ID(this->dyna.actor.params), this->waypointId);
     dist = Actor_WorldDistXYZToPoint(&this->dyna.actor, &waypoint);
-    if (dist < this->dyna.actor.speedXZ) {
-        this->dyna.actor.speedXZ = dist;
+    if (dist < this->dyna.actor.speed) {
+        this->dyna.actor.speed = dist;
     }
     func_80035844(&this->dyna.actor.world.pos, &waypoint, &this->dyna.actor.world.rot, 1);
-    func_8002D97C(&this->dyna.actor);
+    Actor_MoveXYZ(&this->dyna.actor);
     dx = waypoint.x - this->dyna.actor.world.pos.x;
     dy = waypoint.y - this->dyna.actor.world.pos.y;
     dz = waypoint.z - this->dyna.actor.world.pos.z;

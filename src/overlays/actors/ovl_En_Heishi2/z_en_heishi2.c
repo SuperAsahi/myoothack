@@ -4,7 +4,7 @@
  * Description: Hyrulian Guards
  */
 
-#include "vt.h"
+#include "terminal.h"
 #include "z_en_heishi2.h"
 #include "assets/objects/object_sd/object_sd.h"
 #include "assets/objects/object_link_child/object_link_child.h"
@@ -50,16 +50,16 @@ void func_80A546DC(EnHeishi2* this, PlayState* play);
 void func_80A541FC(EnHeishi2* this, PlayState* play);
 void func_80A53DF8(EnHeishi2* this, PlayState* play);
 
-const ActorInit En_Heishi2_InitVars = {
-    ACTOR_EN_HEISHI2,
-    ACTORCAT_NPC,
-    FLAGS,
-    OBJECT_SD,
-    sizeof(EnHeishi2),
-    (ActorFunc)EnHeishi2_Init,
-    (ActorFunc)EnHeishi2_Destroy,
-    (ActorFunc)EnHeishi2_Update,
-    (ActorFunc)EnHeishi2_Draw,
+ActorInit En_Heishi2_InitVars = {
+    /**/ ACTOR_EN_HEISHI2,
+    /**/ ACTORCAT_NPC,
+    /**/ FLAGS,
+    /**/ OBJECT_SD,
+    /**/ sizeof(EnHeishi2),
+    /**/ EnHeishi2_Init,
+    /**/ EnHeishi2_Destroy,
+    /**/ EnHeishi2_Update,
+    /**/ EnHeishi2_Draw,
 };
 
 static ColliderCylinderInit sCylinderInit = {
@@ -111,7 +111,7 @@ void EnHeishi2_Init(Actor* thisx, PlayState* play) {
             this->actor.world.pos.z += 90.0f;
             this->actor.shape.rot.y = this->actor.world.rot.y;
             Collider_DestroyCylinder(play, &this->collider);
-            func_8002DF54(play, NULL, 8);
+            Player_SetCsActionWithHaltedActors(play, NULL, PLAYER_CSACTION_8);
             this->actor.flags |= ACTOR_FLAG_0 | ACTOR_FLAG_4;
             this->actionFunc = func_80A544AC;
         }
@@ -237,7 +237,7 @@ void func_80A5344C(EnHeishi2* this, PlayState* play) {
         this->unk_300 = TEXT_STATE_EVENT;
         switch (play->msgCtx.choiceIndex) {
             case 0:
-                if (gSaveContext.rupees >= 10) {
+                if (gSaveContext.save.info.playerData.rupees >= 10) {
                     Rupees_ChangeBy(-10);
                     this->actor.textId = 0x7098;
                     this->actionFunc = func_80A53538;
@@ -262,7 +262,7 @@ void func_80A5344C(EnHeishi2* this, PlayState* play) {
 void func_80A53538(EnHeishi2* this, PlayState* play) {
     SkelAnime_Update(&this->skelAnime);
     if (this->unk_300 == Message_GetState(&play->msgCtx) && Message_ShouldAdvance(play)) {
-        func_8002DF54(play, NULL, 8);
+        Player_SetCsActionWithHaltedActors(play, NULL, PLAYER_CSACTION_8);
         play->msgCtx.msgMode = MSGMODE_PAUSED;
         this->actionFunc = func_80A535BC;
     }
@@ -284,7 +284,7 @@ void func_80A53638(EnHeishi2* this, PlayState* play) {
 
     SkelAnime_Update(&this->skelAnime);
     if ((frameCount >= 12.0f) && (!this->audioFlag)) {
-        Audio_PlayActorSfx2(&this->actor, NA_SE_EV_SPEAR_HIT);
+        Actor_PlaySfx(&this->actor, NA_SE_EV_SPEAR_HIT);
         this->audioFlag = 1;
     }
     if (this->unk_2EC <= frameCount) {
@@ -319,7 +319,7 @@ void func_80A5372C(EnHeishi2* this, PlayState* play) {
     this->subCamAt.y = 1145.0f;
     this->subCamAt.z = 3014.0f;
 
-    Play_CameraSetAtEye(play, this->subCamId, &this->subCamEye, &this->subCamAt);
+    Play_SetCameraAtEye(play, this->subCamId, &this->subCamEye, &this->subCamAt);
     this->actionFunc = func_80A53850;
 }
 
@@ -327,14 +327,14 @@ void func_80A53850(EnHeishi2* this, PlayState* play) {
     BgSpot15Saku* gate;
 
     SkelAnime_Update(&this->skelAnime);
-    Play_CameraSetAtEye(play, this->subCamId, &this->subCamEye, &this->subCamAt);
+    Play_SetCameraAtEye(play, this->subCamId, &this->subCamEye, &this->subCamAt);
     gate = (BgSpot15Saku*)this->gate;
     if ((this->unk_2F2[0] == 0) || (gate->unk_168 == 0)) {
         Play_ClearCamera(play, this->subCamId);
         Play_ChangeCameraStatus(play, CAM_ID_MAIN, CAM_STAT_ACTIVE);
         Message_CloseTextbox(play);
         this->unk_30C = 1;
-        func_8002DF54(play, NULL, 7);
+        Player_SetCsActionWithHaltedActors(play, NULL, PLAYER_CSACTION_7);
         this->actionFunc = func_80A531E4;
     }
 }
@@ -401,10 +401,10 @@ void func_80A53AD4(EnHeishi2* this, PlayState* play) {
         this->actor.textId = 0x200E;
     }
     this->unk_300 = TEXT_STATE_DONE;
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         exchangeItemId = func_8002F368(play);
-        if (exchangeItemId == EXCH_ITEM_LETTER_ZELDA) {
-            func_80078884(NA_SE_SY_CORRECT_CHIME);
+        if (exchangeItemId == EXCH_ITEM_ZELDAS_LETTER) {
+            Sfx_PlaySfxCentered(NA_SE_SY_CORRECT_CHIME);
             player->actor.textId = 0x2010;
             this->unk_300 = TEXT_STATE_EVENT;
             this->actionFunc = func_80A53C0C;
@@ -415,7 +415,7 @@ void func_80A53AD4(EnHeishi2* this, PlayState* play) {
         yawDiffTemp = this->actor.yawTowardsPlayer - this->actor.shape.rot.y;
         yawDiff = ABS(yawDiffTemp);
         if (!(120.0f < this->actor.xzDistToPlayer) && (yawDiff < 0x4300)) {
-            func_8002F298(&this->actor, play, 100.0f, EXCH_ITEM_LETTER_ZELDA);
+            Actor_OfferTalkExchangeEquiCylinder(&this->actor, play, 100.0f, EXCH_ITEM_ZELDAS_LETTER);
         }
     }
 }
@@ -423,7 +423,7 @@ void func_80A53AD4(EnHeishi2* this, PlayState* play) {
 void func_80A53C0C(EnHeishi2* this, PlayState* play) {
     SkelAnime_Update(&this->skelAnime);
     if ((this->unk_300 == Message_GetState(&play->msgCtx)) && Message_ShouldAdvance(play)) {
-        func_8002DF54(play, NULL, 8);
+        Player_SetCsActionWithHaltedActors(play, NULL, PLAYER_CSACTION_8);
         play->msgCtx.msgMode = MSGMODE_PAUSED;
         this->actionFunc = func_80A53C90;
     }
@@ -447,7 +447,7 @@ void func_80A53D0C(EnHeishi2* this, PlayState* play) {
     SkelAnime_Update(&this->skelAnime);
     if (12.0f <= frameCount) {
         if (this->audioFlag == 0) {
-            Audio_PlayActorSfx2(&this->actor, NA_SE_EV_SPEAR_HIT);
+            Actor_PlaySfx(&this->actor, NA_SE_EV_SPEAR_HIT);
             this->audioFlag = 1;
         }
     }
@@ -487,7 +487,7 @@ void func_80A53DF8(EnHeishi2* this, PlayState* play) {
     this->subCamAt.y = 417.0f;
     this->subCamAtInit.z = -1079.0f;
     this->subCamAt.z = -1079.0f;
-    Play_CameraSetAtEye(play, this->subCamId, &this->subCamEye, &this->subCamAt);
+    Play_SetCameraAtEye(play, this->subCamId, &this->subCamEye, &this->subCamAt);
     this->actionFunc = func_80A53F30;
 }
 
@@ -495,7 +495,7 @@ void func_80A53F30(EnHeishi2* this, PlayState* play) {
     BgGateShutter* gate;
 
     SkelAnime_Update(&this->skelAnime);
-    Play_CameraSetAtEye(play, this->subCamId, &this->subCamEye, &this->subCamAt);
+    Play_SetCameraAtEye(play, this->subCamId, &this->subCamEye, &this->subCamAt);
     gate = (BgGateShutter*)this->gate;
     if ((this->unk_2F2[0] == 0) || (gate->openingState == 0)) {
         Play_ClearCamera(play, this->subCamId);
@@ -507,7 +507,7 @@ void func_80A53F30(EnHeishi2* this, PlayState* play) {
                 this->actionFunc = func_80A54038;
             } else {
                 Message_CloseTextbox(play);
-                func_8002DF54(play, NULL, 7);
+                Player_SetCsActionWithHaltedActors(play, NULL, PLAYER_CSACTION_7);
                 this->actionFunc = func_80A53908;
             }
         } else {
@@ -525,7 +525,7 @@ void func_80A54038(EnHeishi2* this, PlayState* play) {
     if ((Message_GetState(&play->msgCtx) == TEXT_STATE_EVENT) && Message_ShouldAdvance(play)) {
         SET_INFTABLE(INFTABLE_76);
         Message_CloseTextbox(play);
-        func_8002DF54(play, NULL, 7);
+        Player_SetCsActionWithHaltedActors(play, NULL, PLAYER_CSACTION_7);
         this->actionFunc = func_80A53908;
     }
 }
@@ -605,7 +605,7 @@ void func_80A543A0(EnHeishi2* this, PlayState* play) {
     SkelAnime_Update(&this->skelAnime);
 
     if ((frameCount >= 12.0f) && (!this->audioFlag)) {
-        Audio_PlayActorSfx2(&this->actor, NA_SE_EV_SPEAR_HIT);
+        Actor_PlaySfx(&this->actor, NA_SE_EV_SPEAR_HIT);
         this->audioFlag = 1;
     }
 
@@ -650,7 +650,7 @@ void func_80A5455C(EnHeishi2* this, PlayState* play) {
     EnBom* bomb;
 
     if ((Message_GetState(&play->msgCtx) == TEXT_STATE_EVENT) && Message_ShouldAdvance(play)) {
-        func_8002DF54(play, NULL, 7);
+        Player_SetCsActionWithHaltedActors(play, NULL, PLAYER_CSACTION_7);
         Message_CloseTextbox(play);
 
         pos.x = Rand_CenteredFloat(20.0f) + this->unk_274.x;
@@ -659,7 +659,7 @@ void func_80A5455C(EnHeishi2* this, PlayState* play) {
         rotY = Rand_CenteredFloat(7000.0f) + this->actor.yawTowardsPlayer;
         bomb = (EnBom*)Actor_Spawn(&play->actorCtx, play, ACTOR_EN_BOM, pos.x, pos.y, pos.z, 0, rotY, 0, 0);
         if (bomb != NULL) {
-            bomb->actor.speedXZ = Rand_CenteredFloat(5.0f) + 10.0f;
+            bomb->actor.speed = Rand_CenteredFloat(5.0f) + 10.0f;
             bomb->actor.velocity.y = Rand_CenteredFloat(5.0f) + 10.0f;
         }
 
@@ -705,7 +705,7 @@ void func_80A5475C(EnHeishi2* this, PlayState* play) {
         }
     }
 
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         if (this->type == 2) {
             if (this->unk_30E == 1) {
                 this->actionFunc = func_80A5344C;
@@ -725,7 +725,7 @@ void func_80A5475C(EnHeishi2* this, PlayState* play) {
 
             if (this->unk_300 == TEXT_STATE_CHOICE) {
                 this->unk_309 = 1;
-                func_80078884(NA_SE_SY_TRE_BOX_APPEAR);
+                Sfx_PlaySfxCentered(NA_SE_SY_TRE_BOX_APPEAR);
                 this->actionFunc = func_80A540C0;
             }
             return;
@@ -736,7 +736,7 @@ void func_80A5475C(EnHeishi2* this, PlayState* play) {
         ((yawDiff = ABS((s16)(this->actor.yawTowardsPlayer - this->actor.shape.rot.y)),
           !(this->actor.xzDistToPlayer > 120.0f)) &&
          (yawDiff < 0x4300))) {
-        func_8002F2F4(&this->actor, play);
+        Actor_OfferTalkNearColChkInfoCylinder(&this->actor, play);
     }
 }
 
@@ -780,7 +780,7 @@ void EnHeishi2_Update(Actor* thisx, PlayState* play) {
         }
     }
     this->actionFunc(this, play);
-    Actor_MoveForward(&this->actor);
+    Actor_MoveXZGravity(&this->actor);
     switch (this->type) {
         case 6:
             break;
@@ -806,11 +806,11 @@ s32 EnHeishi2_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3
             break;
         default:
             if (limbIndex == 9) {
-                rot->x = rot->x + this->unk_26C.y;
+                rot->x += this->unk_26C.y;
             }
             if (limbIndex == 16) {
-                rot->x = rot->x + this->unk_260.y;
-                rot->z = rot->z + this->unk_260.z;
+                rot->x += this->unk_260.y;
+                rot->z += this->unk_260.z;
             }
     }
 
@@ -838,7 +838,7 @@ void EnHeishi2_DrawKingGuard(Actor* thisx, PlayState* play) {
 void EnHeishi2_Draw(Actor* thisx, PlayState* play) {
     EnHeishi2* this = (EnHeishi2*)thisx;
     Mtx* mtx;
-    s32 linkObjBankIndex;
+    s32 linkChildObjectSlot;
 
     OPEN_DISPS(play->state.gfxCtx, "../z_en_heishi2.c", 1792);
 
@@ -847,17 +847,17 @@ void EnHeishi2_Draw(Actor* thisx, PlayState* play) {
     SkelAnime_DrawOpa(play, this->skelAnime.skeleton, this->skelAnime.jointTable, EnHeishi2_OverrideLimbDraw,
                       EnHeishi2_PostLimbDraw, this);
     if ((this->type == 5) && GET_INFTABLE(INFTABLE_77)) {
-        linkObjBankIndex = Object_GetIndex(&play->objectCtx, OBJECT_LINK_CHILD);
-        if (linkObjBankIndex >= 0) {
+        linkChildObjectSlot = Object_GetSlot(&play->objectCtx, OBJECT_LINK_CHILD);
+        if (linkChildObjectSlot >= 0) {
             Matrix_Put(&this->mtxf_330);
             Matrix_Translate(-570.0f, 0.0f, 0.0f, MTXMODE_APPLY);
             Matrix_RotateZ(DEG_TO_RAD(70), MTXMODE_APPLY);
             mtx = Matrix_NewMtx(play->state.gfxCtx, "../z_en_heishi2.c", 1820) - 7;
 
-            gSPSegment(POLY_OPA_DISP++, 0x06, play->objectCtx.status[linkObjBankIndex].segment);
+            gSPSegment(POLY_OPA_DISP++, 0x06, play->objectCtx.slots[linkChildObjectSlot].segment);
             gSPSegment(POLY_OPA_DISP++, 0x0D, mtx);
             gSPDisplayList(POLY_OPA_DISP++, gLinkChildKeatonMaskDL);
-            gSPSegment(POLY_OPA_DISP++, 0x06, play->objectCtx.status[this->actor.objBankIndex].segment);
+            gSPSegment(POLY_OPA_DISP++, 0x06, play->objectCtx.slots[this->actor.objectSlot].segment);
         }
     }
 

@@ -30,16 +30,16 @@ typedef enum {
     /* 0x04 */ DF_SCREEN_TINT_FINISHED
 } MagicFireScreenTint;
 
-const ActorInit Magic_Fire_InitVars = {
-    ACTOR_MAGIC_FIRE,
-    ACTORCAT_ITEMACTION,
-    FLAGS,
-    OBJECT_GAMEPLAY_KEEP,
-    sizeof(MagicFire),
-    (ActorFunc)MagicFire_Init,
-    (ActorFunc)MagicFire_Destroy,
-    (ActorFunc)MagicFire_Update,
-    (ActorFunc)MagicFire_Draw,
+ActorInit Magic_Fire_InitVars = {
+    /**/ ACTOR_MAGIC_FIRE,
+    /**/ ACTORCAT_ITEMACTION,
+    /**/ FLAGS,
+    /**/ OBJECT_GAMEPLAY_KEEP,
+    /**/ sizeof(MagicFire),
+    /**/ MagicFire_Init,
+    /**/ MagicFire_Destroy,
+    /**/ MagicFire_Update,
+    /**/ MagicFire_Draw,
 };
 
 #include "assets/overlays/ovl_Magic_Fire/ovl_Magic_Fire.c"
@@ -111,7 +111,7 @@ void MagicFire_UpdateBeforeCast(Actor* thisx, PlayState* play) {
         this->actionTimer--;
     } else {
         this->actor.update = MagicFire_Update;
-        func_8002F7DC(&player->actor, NA_SE_PL_MAGIC_FIRE);
+        Player_PlaySfx(player, NA_SE_PL_MAGIC_FIRE);
     }
     this->actor.world.pos = player->actor.world.pos;
 }

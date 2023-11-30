@@ -14,16 +14,16 @@ void EnBx_Destroy(Actor* thisx, PlayState* play);
 void EnBx_Update(Actor* thisx, PlayState* play);
 void EnBx_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit En_Bx_InitVars = {
-    ACTOR_EN_BX,
-    ACTORCAT_ENEMY,
-    FLAGS,
-    OBJECT_BXA,
-    sizeof(EnBx),
-    (ActorFunc)EnBx_Init,
-    (ActorFunc)EnBx_Destroy,
-    (ActorFunc)EnBx_Update,
-    (ActorFunc)EnBx_Draw,
+ActorInit En_Bx_InitVars = {
+    /**/ ACTOR_EN_BX,
+    /**/ ACTORCAT_ENEMY,
+    /**/ FLAGS,
+    /**/ OBJECT_BXA,
+    /**/ sizeof(EnBx),
+    /**/ EnBx_Init,
+    /**/ EnBx_Destroy,
+    /**/ EnBx_Update,
+    /**/ EnBx_Draw,
 };
 
 static ColliderCylinderInit sCylinderInit = {
@@ -80,7 +80,8 @@ void EnBx_Init(Actor* thisx, PlayState* play) {
     thisx->scale.x = thisx->scale.z = 0.01f;
     thisx->scale.y = 0.03f;
 
-    thisx->world.pos.y = thisx->world.pos.y - 100.0f;
+    thisx->world.pos.y -= 100.0f;
+
     for (i = 0; i < 4; i++) {
         this->unk_184[i] = sp48;
         if (i == 0) {
@@ -183,7 +184,7 @@ void EnBx_Update(Actor* thisx, PlayState* play) {
             }
         }
 
-        Audio_PlayActorSfx2(thisx, NA_SE_EN_BIRI_SPARK - SFX_FLAG);
+        Actor_PlaySfx(thisx, NA_SE_EN_BIRI_SPARK - SFX_FLAG);
     }
     thisx->focus.pos = thisx->world.pos;
     Collider_UpdateCylinder(thisx, &this->collider);

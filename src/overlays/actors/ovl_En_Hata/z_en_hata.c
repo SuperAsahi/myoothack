@@ -14,16 +14,16 @@ void EnHata_Destroy(Actor* thisx, PlayState* play);
 void EnHata_Update(Actor* thisx, PlayState* play2);
 void EnHata_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit En_Hata_InitVars = {
-    ACTOR_EN_HATA,
-    ACTORCAT_PROP,
-    FLAGS,
-    OBJECT_HATA,
-    sizeof(EnHata),
-    (ActorFunc)EnHata_Init,
-    (ActorFunc)EnHata_Destroy,
-    (ActorFunc)EnHata_Update,
-    (ActorFunc)EnHata_Draw,
+ActorInit En_Hata_InitVars = {
+    /**/ ACTOR_EN_HATA,
+    /**/ ACTORCAT_PROP,
+    /**/ FLAGS,
+    /**/ OBJECT_HATA,
+    /**/ sizeof(EnHata),
+    /**/ EnHata_Init,
+    /**/ EnHata_Destroy,
+    /**/ EnHata_Update,
+    /**/ EnHata_Draw,
 };
 
 // Unused Collider and CollisionCheck data

@@ -18,16 +18,16 @@ void MagicDark_DiamondDraw(Actor* thisx, PlayState* play);
 
 void MagicDark_DimLighting(PlayState* play, f32 intensity);
 
-const ActorInit Magic_Dark_InitVars = {
-    ACTOR_MAGIC_DARK,
-    ACTORCAT_ITEMACTION,
-    FLAGS,
-    OBJECT_GAMEPLAY_KEEP,
-    sizeof(MagicDark),
-    (ActorFunc)MagicDark_Init,
-    (ActorFunc)MagicDark_Destroy,
-    (ActorFunc)MagicDark_OrbUpdate,
-    (ActorFunc)MagicDark_OrbDraw,
+ActorInit Magic_Dark_InitVars = {
+    /**/ ACTOR_MAGIC_DARK,
+    /**/ ACTORCAT_ITEMACTION,
+    /**/ FLAGS,
+    /**/ OBJECT_GAMEPLAY_KEEP,
+    /**/ sizeof(MagicDark),
+    /**/ MagicDark_Init,
+    /**/ MagicDark_Destroy,
+    /**/ MagicDark_OrbUpdate,
+    /**/ MagicDark_OrbDraw,
 };
 
 #include "assets/overlays/ovl_Magic_Dark/ovl_Magic_Dark.c"

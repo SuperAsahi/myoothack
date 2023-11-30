@@ -14,16 +14,16 @@ void BgHidanRsekizou_Destroy(Actor* thisx, PlayState* play);
 void BgHidanRsekizou_Update(Actor* thisx, PlayState* play);
 void BgHidanRsekizou_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit Bg_Hidan_Rsekizou_InitVars = {
-    ACTOR_BG_HIDAN_RSEKIZOU,
-    ACTORCAT_BG,
-    FLAGS,
-    OBJECT_HIDAN_OBJECTS,
-    sizeof(BgHidanRsekizou),
-    (ActorFunc)BgHidanRsekizou_Init,
-    (ActorFunc)BgHidanRsekizou_Destroy,
-    (ActorFunc)BgHidanRsekizou_Update,
-    (ActorFunc)BgHidanRsekizou_Draw,
+ActorInit Bg_Hidan_Rsekizou_InitVars = {
+    /**/ ACTOR_BG_HIDAN_RSEKIZOU,
+    /**/ ACTORCAT_BG,
+    /**/ FLAGS,
+    /**/ OBJECT_HIDAN_OBJECTS,
+    /**/ sizeof(BgHidanRsekizou),
+    /**/ BgHidanRsekizou_Init,
+    /**/ BgHidanRsekizou_Destroy,
+    /**/ BgHidanRsekizou_Update,
+    /**/ BgHidanRsekizou_Draw,
 };
 
 static ColliderJntSphElementInit sJntSphElementsInit[6] = {

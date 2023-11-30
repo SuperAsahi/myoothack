@@ -17,16 +17,16 @@ void ObjKibako2_Draw(Actor* thisx, PlayState* play);
 void ObjKibako2_Idle(ObjKibako2* this, PlayState* play);
 void ObjKibako2_Kill(ObjKibako2* this, PlayState* play);
 
-const ActorInit Obj_Kibako2_InitVars = {
-    ACTOR_OBJ_KIBAKO2,
-    ACTORCAT_BG,
-    FLAGS,
-    OBJECT_KIBAKO2,
-    sizeof(ObjKibako2),
-    (ActorFunc)ObjKibako2_Init,
-    (ActorFunc)ObjKibako2_Destroy,
-    (ActorFunc)ObjKibako2_Update,
-    (ActorFunc)ObjKibako2_Draw,
+ActorInit Obj_Kibako2_InitVars = {
+    /**/ ACTOR_OBJ_KIBAKO2,
+    /**/ ACTORCAT_BG,
+    /**/ FLAGS,
+    /**/ OBJECT_KIBAKO2,
+    /**/ sizeof(ObjKibako2),
+    /**/ ObjKibako2_Init,
+    /**/ ObjKibako2_Destroy,
+    /**/ ObjKibako2_Update,
+    /**/ ObjKibako2_Draw,
 };
 
 static ColliderCylinderInit sCylinderInit = {

@@ -5,7 +5,7 @@
  */
 
 #include "z_elf_msg2.h"
-#include "vt.h"
+#include "terminal.h"
 
 #define FLAGS ACTOR_FLAG_4
 
@@ -18,16 +18,16 @@ s32 ElfMsg2_GetMessageId(ElfMsg2* this);
 void ElfMsg2_WaitUntilActivated(ElfMsg2* this, PlayState* play);
 void ElfMsg2_WaitForTextRead(ElfMsg2* this, PlayState* play);
 
-const ActorInit Elf_Msg2_InitVars = {
-    ACTOR_ELF_MSG2,
-    ACTORCAT_BG,
-    FLAGS,
-    OBJECT_GAMEPLAY_KEEP,
-    sizeof(ElfMsg2),
-    (ActorFunc)ElfMsg2_Init,
-    (ActorFunc)ElfMsg2_Destroy,
-    (ActorFunc)ElfMsg2_Update,
-    (ActorFunc)ElfMsg2_Draw,
+ActorInit Elf_Msg2_InitVars = {
+    /**/ ACTOR_ELF_MSG2,
+    /**/ ACTORCAT_BG,
+    /**/ FLAGS,
+    /**/ OBJECT_GAMEPLAY_KEEP,
+    /**/ sizeof(ElfMsg2),
+    /**/ ElfMsg2_Init,
+    /**/ ElfMsg2_Destroy,
+    /**/ ElfMsg2_Update,
+    /**/ ElfMsg2_Draw,
 };
 
 static InitChainEntry sInitChain[] = {
@@ -120,7 +120,7 @@ void ElfMsg2_WaitForTextClose(ElfMsg2* this, PlayState* play) {
  * Runs while Navi text is not up.
  */
 void ElfMsg2_WaitForTextRead(ElfMsg2* this, PlayState* play) {
-    if (Actor_ProcessTalkRequest(&this->actor, play)) {
+    if (Actor_TalkOfferAccepted(&this->actor, play)) {
         ElfMsg2_SetupAction(this, ElfMsg2_WaitForTextClose);
     }
 }

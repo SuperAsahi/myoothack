@@ -16,16 +16,16 @@ void EnVbBall_Destroy(Actor* thisx, PlayState* play);
 void EnVbBall_Update(Actor* thisx, PlayState* play2);
 void EnVbBall_Draw(Actor* thisx, PlayState* play);
 
-const ActorInit En_Vb_Ball_InitVars = {
-    0,
-    ACTORCAT_BOSS,
-    FLAGS,
-    OBJECT_FD,
-    sizeof(EnVbBall),
-    (ActorFunc)EnVbBall_Init,
-    (ActorFunc)EnVbBall_Destroy,
-    (ActorFunc)EnVbBall_Update,
-    (ActorFunc)EnVbBall_Draw,
+ActorInit En_Vb_Ball_InitVars = {
+    /**/ 0,
+    /**/ ACTORCAT_BOSS,
+    /**/ FLAGS,
+    /**/ OBJECT_FD,
+    /**/ sizeof(EnVbBall),
+    /**/ EnVbBall_Init,
+    /**/ EnVbBall_Destroy,
+    /**/ EnVbBall_Update,
+    /**/ EnVbBall_Draw,
 };
 
 static ColliderCylinderInit sCylinderInit = {
@@ -178,7 +178,7 @@ void EnVbBall_Update(Actor* thisx, PlayState* play2) {
     this->actor.shape.rot.y += (s16)this->yRotVel;
     this->actor.velocity.y += -1.0f;
     this->actor.gravity = -1.0f;
-    func_8002D7EC(&this->actor);
+    Actor_UpdatePos(&this->actor);
     if (this->actor.params >= 200) {
         EnVbBall_UpdateBones(this, play);
     } else {
@@ -289,7 +289,7 @@ void EnVbBall_Update(Actor* thisx, PlayState* play2) {
             Player* player = GET_PLAYER(play);
 
             this->collider.base.atFlags &= ~AT_HIT;
-            Audio_PlayActorSfx2(&player->actor, NA_SE_PL_BODY_HIT);
+            Actor_PlaySfx(&player->actor, NA_SE_PL_BODY_HIT);
         }
         Collider_UpdateCylinder(&this->actor, &this->collider);
         CollisionCheck_SetAT(play, &play->colChkCtx, &this->collider.base);

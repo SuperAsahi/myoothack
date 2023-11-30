@@ -17,7 +17,7 @@ pipeline {
         }
         stage('Build (qemu-irix)') {
             when {
-                branch 'master'
+                branch 'main'
             }
             steps {
                 sh 'ORIG_COMPILER=1 make -j'
@@ -26,7 +26,7 @@ pipeline {
         stage('Build') {
             when {
                 not {
-                    branch 'master'
+                    branch 'main'
                 }
             }
             steps {
@@ -35,7 +35,7 @@ pipeline {
         }
         stage('Report Progress') {
             when {
-                branch 'master'
+                branch 'main'
             }
             steps {
                 sh 'mkdir reports'
@@ -47,7 +47,7 @@ pipeline {
         }
         stage('Update Progress') {
             when {
-                branch 'master'
+                branch 'main'
             }
             agent {
                 label 'zeldaret_website'
@@ -62,7 +62,15 @@ pipeline {
     }
     post {
         always {
-            cleanWs()
+            echo "Finished, deleting directory."
+            deleteDir()
+        }
+        cleanup {
+            echo "Clean up in post."
+            cleanWs(cleanWhenNotBuilt: false,
+                    deleteDirs: true,
+                    disableDeferredWipeout: true,
+                    notFailBuild: true)
         }
     }
 }

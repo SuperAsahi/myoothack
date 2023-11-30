@@ -32,16 +32,16 @@ void func_8086CABC(BgBdanObjects* this, PlayState* play);
 void func_8086CB10(BgBdanObjects* this, PlayState* play);
 void func_8086CB8C(BgBdanObjects* this, PlayState* play);
 
-const ActorInit Bg_Bdan_Objects_InitVars = {
-    ACTOR_BG_BDAN_OBJECTS,
-    ACTORCAT_BG,
-    FLAGS,
-    OBJECT_BDAN_OBJECTS,
-    sizeof(BgBdanObjects),
-    (ActorFunc)BgBdanObjects_Init,
-    (ActorFunc)BgBdanObjects_Destroy,
-    (ActorFunc)BgBdanObjects_Update,
-    (ActorFunc)BgBdanObjects_Draw,
+ActorInit Bg_Bdan_Objects_InitVars = {
+    /**/ ACTOR_BG_BDAN_OBJECTS,
+    /**/ ACTORCAT_BG,
+    /**/ FLAGS,
+    /**/ OBJECT_BDAN_OBJECTS,
+    /**/ sizeof(BgBdanObjects),
+    /**/ BgBdanObjects_Init,
+    /**/ BgBdanObjects_Destroy,
+    /**/ BgBdanObjects_Update,
+    /**/ BgBdanObjects_Draw,
 };
 
 static ColliderCylinderInit sCylinderInit = {
@@ -204,7 +204,7 @@ void func_8086C054(BgBdanObjects* this, PlayState* play) {
 void func_8086C1A0(BgBdanObjects* this, PlayState* play) {
     if (Math_SmoothStepToF(&this->dyna.actor.world.pos.y, this->dyna.actor.home.pos.y + 500.0f, 0.5f, 7.5f, 1.0f) <
         0.1f) {
-        Audio_PlayActorSfx2(&this->dyna.actor, NA_SE_EV_BUYOSTAND_STOP_A);
+        Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_BUYOSTAND_STOP_A);
         this->actionFunc = func_8086C29C;
         this->timer = 30;
         BgBdanObjects_SetContactRu1(this, 2);
@@ -241,7 +241,7 @@ void func_8086C29C(BgBdanObjects* this, PlayState* play) {
         BgBdanObjects_SetContactRu1(this, 4);
         this->timer = 10;
         this->actionFunc = func_8086C55C;
-        func_8005B1A4(GET_ACTIVE_CAM(play));
+        Camera_SetFinishedFlag(GET_ACTIVE_CAM(play));
     }
 }
 
@@ -253,7 +253,7 @@ void func_8086C3D8(BgBdanObjects* this, PlayState* play) {
                      this->dyna.actor.velocity.y)) {
         this->dyna.actor.world.rot.y = 0;
         this->timer = 60;
-        Audio_PlayActorSfx2(&this->dyna.actor, NA_SE_EV_BUYOSTAND_STOP_U);
+        Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_BUYOSTAND_STOP_U);
         this->dyna.actor.child->world.pos.y = this->dyna.actor.world.pos.y + 140.0f;
         this->actionFunc = func_8086C5BC;
         OnePointCutscene_Init(play, 3080, -99, this->dyna.actor.child, CAM_ID_MAIN);
@@ -337,7 +337,7 @@ void func_8086C76C(BgBdanObjects* this, PlayState* play) {
 void func_8086C7D0(BgBdanObjects* this, PlayState* play) {
     if (Math_SmoothStepToF(&this->dyna.actor.world.pos.y, this->dyna.actor.home.pos.y + 965.0f, 0.5f, 15.0f, 0.2f) <
         0.01f) {
-        Audio_PlayActorSfx2(&this->dyna.actor, NA_SE_EV_BUYOSTAND_STOP_A);
+        Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_BUYOSTAND_STOP_A);
         this->actionFunc = BgBdanObjects_DoNothing;
     } else {
         func_8002F974(&this->dyna.actor, NA_SE_EV_BUYOSTAND_RISING - SFX_FLAG);
@@ -354,12 +354,12 @@ void func_8086C874(BgBdanObjects* this, PlayState* play) {
     if (this->switchFlag == 0) {
         if (DynaPolyActor_IsPlayerOnTop(&this->dyna)) {
             this->cameraSetting = play->cameraPtrs[CAM_ID_MAIN]->setting;
-            Camera_ChangeSetting(play->cameraPtrs[CAM_ID_MAIN], CAM_SET_NORMAL2);
-            func_8005AD1C(play->cameraPtrs[CAM_ID_MAIN], 4);
+            Camera_RequestSetting(play->cameraPtrs[CAM_ID_MAIN], CAM_SET_NORMAL2);
+            Camera_UnsetStateFlag(play->cameraPtrs[CAM_ID_MAIN], CAM_STATE_CHECK_BG);
             this->switchFlag = 10;
         }
     } else {
-        Camera_ChangeSetting(play->cameraPtrs[CAM_ID_MAIN], CAM_SET_NORMAL2);
+        Camera_RequestSetting(play->cameraPtrs[CAM_ID_MAIN], CAM_SET_NORMAL2);
         if (!DynaPolyActor_IsPlayerOnTop(&this->dyna)) {
             if (this->switchFlag != 0) {
                 this->switchFlag--;
@@ -367,8 +367,8 @@ void func_8086C874(BgBdanObjects* this, PlayState* play) {
         }
         if (this->switchFlag == 0) {
             if (1) {}
-            Camera_ChangeSetting(play->cameraPtrs[CAM_ID_MAIN], this->cameraSetting);
-            func_8005ACFC(play->cameraPtrs[CAM_ID_MAIN], 4);
+            Camera_RequestSetting(play->cameraPtrs[CAM_ID_MAIN], this->cameraSetting);
+            Camera_SetStateFlag(play->cameraPtrs[CAM_ID_MAIN], CAM_STATE_CHECK_BG);
         }
     }
     this->dyna.actor.world.pos.y =
@@ -429,7 +429,7 @@ void func_8086CB8C(BgBdanObjects* this, PlayState* play) {
     this->dyna.actor.world.pos.y = this->dyna.actor.home.pos.y - (cosf(this->timer * (M_PI / 50.0f)) * 200.0f);
 
     if (this->timer == 0) {
-        Audio_PlayActorSfx2(&this->dyna.actor, NA_SE_EV_BUYOSTAND_STOP_U);
+        Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_BUYOSTAND_STOP_U);
         this->actionFunc = BgBdanObjects_DoNothing;
         // Using `CAM_ID_NONE` here defaults to the active camera
         Play_CopyCamera(play, CAM_ID_MAIN, CAM_ID_NONE);

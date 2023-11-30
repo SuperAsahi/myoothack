@@ -18,16 +18,16 @@ void OceffStorm_Draw2(Actor* thisx, PlayState* play);
 void OceffStorm_DefaultAction(OceffStorm* this, PlayState* play);
 void OceffStorm_UnkAction(OceffStorm* this, PlayState* play);
 
-const ActorInit Oceff_Storm_InitVars = {
-    ACTOR_OCEFF_STORM,
-    ACTORCAT_ITEMACTION,
-    FLAGS,
-    OBJECT_GAMEPLAY_KEEP,
-    sizeof(OceffStorm),
-    (ActorFunc)OceffStorm_Init,
-    (ActorFunc)OceffStorm_Destroy,
-    (ActorFunc)OceffStorm_Update,
-    (ActorFunc)OceffStorm_Draw,
+ActorInit Oceff_Storm_InitVars = {
+    /**/ ACTOR_OCEFF_STORM,
+    /**/ ACTORCAT_ITEMACTION,
+    /**/ FLAGS,
+    /**/ OBJECT_GAMEPLAY_KEEP,
+    /**/ sizeof(OceffStorm),
+    /**/ OceffStorm_Init,
+    /**/ OceffStorm_Destroy,
+    /**/ OceffStorm_Update,
+    /**/ OceffStorm_Draw,
 };
 
 void OceffStorm_SetupAction(OceffStorm* this, OceffStormActionFunc actionFunc) {

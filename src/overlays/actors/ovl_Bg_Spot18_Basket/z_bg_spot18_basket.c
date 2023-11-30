@@ -1,6 +1,6 @@
 #include "z_bg_spot18_basket.h"
 #include "assets/objects/object_spot18_obj/object_spot18_obj.h"
-#include "vt.h"
+#include "terminal.h"
 
 #define FLAGS ACTOR_FLAG_4
 
@@ -22,16 +22,16 @@ void func_808B7D50(BgSpot18Basket* this, PlayState* play);
 void func_808B7FC0(BgSpot18Basket* this, PlayState* play);
 void func_808B81A0(BgSpot18Basket* this, PlayState* play);
 
-const ActorInit Bg_Spot18_Basket_InitVars = {
-    ACTOR_BG_SPOT18_BASKET,
-    ACTORCAT_PROP,
-    FLAGS,
-    OBJECT_SPOT18_OBJ,
-    sizeof(BgSpot18Basket),
-    (ActorFunc)BgSpot18Basket_Init,
-    (ActorFunc)BgSpot18Basket_Destroy,
-    (ActorFunc)BgSpot18Basket_Update,
-    (ActorFunc)BgSpot18Basket_Draw,
+ActorInit Bg_Spot18_Basket_InitVars = {
+    /**/ ACTOR_BG_SPOT18_BASKET,
+    /**/ ACTORCAT_PROP,
+    /**/ FLAGS,
+    /**/ OBJECT_SPOT18_OBJ,
+    /**/ sizeof(BgSpot18Basket),
+    /**/ BgSpot18Basket_Init,
+    /**/ BgSpot18Basket_Destroy,
+    /**/ BgSpot18Basket_Update,
+    /**/ BgSpot18Basket_Draw,
 };
 
 static ColliderJntSphElementInit sJntSphElementsInit[2] = {
@@ -249,7 +249,7 @@ void func_808B7D50(BgSpot18Basket* this, PlayState* play) {
         Math_StepToS(&this->unk_210, 0xBB8, 0x64);
     }
 
-    this->dyna.actor.shape.rot.y = this->dyna.actor.shape.rot.y + this->unk_210;
+    this->dyna.actor.shape.rot.y += this->unk_210;
 
     if (this->unk_216 < 70) {
         Math_StepToF(&this->unk_208, 100.0f, 2.0f);
@@ -415,9 +415,9 @@ void func_808B81A0(BgSpot18Basket* this, PlayState* play) {
         }
     } else if (this->unk_216 == 2) {
         if (this->unk_218 == 2) {
-            func_80078884(NA_SE_SY_CORRECT_CHIME);
+            Sfx_PlaySfxCentered(NA_SE_SY_CORRECT_CHIME);
         } else {
-            func_80078884(NA_SE_SY_TRE_BOX_APPEAR);
+            Sfx_PlaySfxCentered(NA_SE_SY_TRE_BOX_APPEAR);
         }
     } else if (this->unk_216 == 200) {
         func_808B7BB0(this);

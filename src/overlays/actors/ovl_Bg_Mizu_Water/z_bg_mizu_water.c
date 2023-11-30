@@ -29,16 +29,16 @@ static WaterLevel sWaterLevels[] = {
     { WATER_TEMPLE_WATER_F1_FLAG, WATER_TEMPLE_WATER_F1_Y - WATER_TEMPLE_WATER_F3_Y },
 };
 
-const ActorInit Bg_Mizu_Water_InitVars = {
-    ACTOR_BG_MIZU_WATER,
-    ACTORCAT_BG,
-    FLAGS,
-    OBJECT_MIZU_OBJECTS,
-    sizeof(BgMizuWater),
-    (ActorFunc)BgMizuWater_Init,
-    (ActorFunc)BgMizuWater_Destroy,
-    (ActorFunc)BgMizuWater_Update,
-    (ActorFunc)BgMizuWater_Draw,
+ActorInit Bg_Mizu_Water_InitVars = {
+    /**/ ACTOR_BG_MIZU_WATER,
+    /**/ ACTORCAT_BG,
+    /**/ FLAGS,
+    /**/ OBJECT_MIZU_OBJECTS,
+    /**/ sizeof(BgMizuWater),
+    /**/ BgMizuWater_Init,
+    /**/ BgMizuWater_Destroy,
+    /**/ BgMizuWater_Update,
+    /**/ BgMizuWater_Draw,
 };
 
 static f32 sUnused1 = 0;

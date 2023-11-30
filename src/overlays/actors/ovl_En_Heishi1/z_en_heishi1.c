@@ -6,7 +6,7 @@
 
 #include "z_en_heishi1.h"
 #include "assets/objects/object_sd/object_sd.h"
-#include "vt.h"
+#include "terminal.h"
 
 #define FLAGS ACTOR_FLAG_4
 
@@ -31,16 +31,16 @@ void EnHeishi1_WaitNight(EnHeishi1* this, PlayState* play);
 
 static s32 sPlayerIsCaught = false;
 
-const ActorInit En_Heishi1_InitVars = {
-    0,
-    ACTORCAT_NPC,
-    FLAGS,
-    OBJECT_SD,
-    sizeof(EnHeishi1),
-    (ActorFunc)EnHeishi1_Init,
-    (ActorFunc)EnHeishi1_Destroy,
-    (ActorFunc)EnHeishi1_Update,
-    (ActorFunc)EnHeishi1_Draw,
+ActorInit En_Heishi1_InitVars = {
+    /**/ 0,
+    /**/ ACTORCAT_NPC,
+    /**/ FLAGS,
+    /**/ OBJECT_SD,
+    /**/ sizeof(EnHeishi1),
+    /**/ EnHeishi1_Init,
+    /**/ EnHeishi1_Destroy,
+    /**/ EnHeishi1_Update,
+    /**/ EnHeishi1_Draw,
 };
 
 static f32 sAnimParamsInit[][8] = {
@@ -98,8 +98,8 @@ void EnHeishi1_Init(Actor* thisx, PlayState* play) {
     osSyncPrintf(VT_FGCOL(MAGENTA) " (頭)反転アングルスピード加算値 %f\n" VT_RST, this->headTurnSpeedScale);
     // "(head) maximum turning angle speed"
     osSyncPrintf(VT_FGCOL(MAGENTA) " (頭)反転アングルスピード最大☆ %f\n" VT_RST, this->headTurnSpeedMax);
-    osSyncPrintf(VT_FGCOL(GREEN) " 今時間 %d\n" VT_RST, ((void)0, gSaveContext.dayTime)); // "current time"
-    osSyncPrintf(VT_FGCOL(YELLOW) " チェック時間 %d\n" VT_RST, CLOCK_TIME(17, 30) - 1);   // "check time"
+    osSyncPrintf(VT_FGCOL(GREEN) " 今時間 %d\n" VT_RST, ((void)0, gSaveContext.save.dayTime)); // "current time"
+    osSyncPrintf(VT_FGCOL(YELLOW) " チェック時間 %d\n" VT_RST, CLOCK_TIME(17, 30) - 1);        // "check time"
     osSyncPrintf("\n\n");
 
     if (this->path == 3) {
@@ -111,13 +111,13 @@ void EnHeishi1_Init(Actor* thisx, PlayState* play) {
     }
 
     if (this->type != 5) {
-        if (((gSaveContext.dayTime < CLOCK_TIME(17, 18) - 1) || IS_DAY) && !GET_EVENTCHKINF(EVENTCHKINF_80)) {
+        if (((gSaveContext.save.dayTime < CLOCK_TIME(17, 18) - 1) || IS_DAY) && !GET_EVENTCHKINF(EVENTCHKINF_80)) {
             this->actionFunc = EnHeishi1_SetupWalk;
         } else {
             Actor_Kill(&this->actor);
         }
     } else {
-        if ((gSaveContext.dayTime > CLOCK_TIME(17, 18) - 1) || !IS_DAY || GET_EVENTCHKINF(EVENTCHKINF_80)) {
+        if ((gSaveContext.save.dayTime > CLOCK_TIME(17, 18) - 1) || !IS_DAY || GET_EVENTCHKINF(EVENTCHKINF_80)) {
             this->actionFunc = EnHeishi1_SetupWaitNight;
         } else {
             Actor_Kill(&this->actor);
@@ -149,7 +149,7 @@ void EnHeishi1_Walk(EnHeishi1* this, PlayState* play) {
     SkelAnime_Update(&this->skelAnime);
 
     if (Animation_OnFrame(&this->skelAnime, 1.0f) || Animation_OnFrame(&this->skelAnime, 17.0f)) {
-        Audio_PlayActorSfx2(&this->actor, NA_SE_EV_KNIGHT_WALK);
+        Actor_PlaySfx(&this->actor, NA_SE_EV_KNIGHT_WALK);
     }
 
     if (!sPlayerIsCaught) {
@@ -347,7 +347,7 @@ void EnHeishi1_Kick(EnHeishi1* this, PlayState* play) {
             Message_CloseTextbox(play);
             if (!this->loadStarted) {
                 SET_EVENTCHKINF(EVENTCHKINF_4E);
-                play->nextEntranceIndex = ENTR_SPOT15_3;
+                play->nextEntranceIndex = ENTR_HYRULE_CASTLE_3;
                 play->transitionTrigger = TRANS_TRIGGER_START;
                 this->loadStarted = true;
                 sPlayerIsCaught = false;
@@ -370,9 +370,9 @@ void EnHeishi1_WaitNight(EnHeishi1* this, PlayState* play) {
 
     if (this->actor.xzDistToPlayer < 100.0f) {
         Message_StartTextbox(play, 0x702D, &this->actor);
-        func_80078884(NA_SE_SY_FOUND);
+        Sfx_PlaySfxCentered(NA_SE_SY_FOUND);
         osSyncPrintf(VT_FGCOL(GREEN) "☆☆☆☆☆ 発見！ ☆☆☆☆☆ \n" VT_RST); // "Discovered!"
-        func_8002DF54(play, &this->actor, 1);
+        Player_SetCsActionWithHaltedActors(play, &this->actor, PLAYER_CSACTION_1);
         this->actionFunc = EnHeishi1_SetupKick;
     }
 }
@@ -453,10 +453,10 @@ void EnHeishi1_Update(Actor* thisx, PlayState* play) {
                                 this->linkDetected = false;
                                 // this 60 unit height check is so the player doesn't get caught when on the upper path
                                 if (fabsf(player->actor.world.pos.y - this->actor.world.pos.y) < 60.0f) {
-                                    func_80078884(NA_SE_SY_FOUND);
+                                    Sfx_PlaySfxCentered(NA_SE_SY_FOUND);
                                     // "Discovered!"
                                     osSyncPrintf(VT_FGCOL(GREEN) "☆☆☆☆☆ 発見！ ☆☆☆☆☆ \n" VT_RST);
-                                    func_8002DF54(play, &this->actor, 1);
+                                    Player_SetCsActionWithHaltedActors(play, &this->actor, PLAYER_CSACTION_1);
                                     sPlayerIsCaught = true;
                                     this->actionFunc = EnHeishi1_SetupMoveToLink;
                                 }

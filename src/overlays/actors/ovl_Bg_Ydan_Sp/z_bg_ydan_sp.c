@@ -24,16 +24,16 @@ typedef enum {
     /* 1 */ WEB_WALL
 } BgYdanSpType;
 
-const ActorInit Bg_Ydan_Sp_InitVars = {
-    ACTOR_BG_YDAN_SP,
-    ACTORCAT_BG,
-    FLAGS,
-    OBJECT_YDAN_OBJECTS,
-    sizeof(BgYdanSp),
-    (ActorFunc)BgYdanSp_Init,
-    (ActorFunc)BgYdanSp_Destroy,
-    (ActorFunc)BgYdanSp_Update,
-    (ActorFunc)BgYdanSp_Draw,
+ActorInit Bg_Ydan_Sp_InitVars = {
+    /**/ ACTOR_BG_YDAN_SP,
+    /**/ ACTORCAT_BG,
+    /**/ FLAGS,
+    /**/ OBJECT_YDAN_OBJECTS,
+    /**/ sizeof(BgYdanSp),
+    /**/ BgYdanSp_Init,
+    /**/ BgYdanSp_Destroy,
+    /**/ BgYdanSp_Update,
+    /**/ BgYdanSp_Draw,
 };
 
 static ColliderTrisElementInit sTrisItemsInit[2] = {
@@ -168,8 +168,7 @@ void BgYdanSp_UpdateFloorWebCollision(BgYdanSp* this) {
 
 void BgYdanSp_BurnWeb(BgYdanSp* this, PlayState* play) {
     this->timer = 30;
-    this = this;
-    func_80078884(NA_SE_SY_CORRECT_CHIME);
+    Sfx_PlaySfxCentered(NA_SE_SY_CORRECT_CHIME);
     Flags_SetSwitch(play, this->isDestroyedSwitchFlag);
     if (this->dyna.actor.params == WEB_FLOOR) {
         this->actionFunc = BgYdanSp_BurnFloorWeb;
@@ -252,7 +251,7 @@ void BgYdanSp_FloorWebBreaking(BgYdanSp* this, PlayState* play) {
     if (this->dyna.actor.home.pos.y - this->dyna.actor.world.pos.y > 190.0f) {
         DynaPoly_DisableCollision(play, &play->colCtx.dyna, this->dyna.bgId);
         this->timer = 40;
-        func_80078884(NA_SE_SY_CORRECT_CHIME);
+        Sfx_PlaySfxCentered(NA_SE_SY_CORRECT_CHIME);
         Flags_SetSwitch(play, this->isDestroyedSwitchFlag);
         this->actionFunc = BgYdanSp_FloorWebBroken;
         pos.y = this->dyna.actor.world.pos.y - 60.0f;
@@ -296,7 +295,7 @@ void BgYdanSp_FloorWebIdle(BgYdanSp* this, PlayState* play) {
                 this->dyna.actor.room = -1;
                 this->dyna.actor.flags |= ACTOR_FLAG_4;
                 this->timer = 40;
-                Audio_PlayActorSfx2(&this->dyna.actor, NA_SE_EV_WEB_BROKEN);
+                Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_WEB_BROKEN);
                 this->actionFunc = BgYdanSp_FloorWebBreaking;
                 return;
             }
@@ -308,15 +307,11 @@ void BgYdanSp_FloorWebIdle(BgYdanSp* this, PlayState* play) {
                 this->timer = 14;
             }
         }
-        if (player->actor.speedXZ != 0.0f) {
+        if (player->actor.speed != 0.0f) {
             if (this->unk_16C < 0.1f) {
                 this->timer = 14;
             }
-            if (this->unk_16C < 2.0f) {
-                this->unk_16C = 2.0f;
-            } else {
-                this->unk_16C = this->unk_16C;
-            }
+            this->unk_16C = CLAMP_MIN(this->unk_16C, 2.0f);
         }
     }
     if (this->timer != 0) {
@@ -329,7 +324,7 @@ void BgYdanSp_FloorWebIdle(BgYdanSp* this, PlayState* play) {
     Math_ApproachZeroF(&this->unk_16C, 1.0f, 0.8f);
     if (this->timer == 13) {
         if (this->unk_16C > 3.0f) {
-            Audio_PlayActorSfx2(&this->dyna.actor, NA_SE_EV_WEB_VIBRATION);
+            Actor_PlaySfx(&this->dyna.actor, NA_SE_EV_WEB_VIBRATION);
         } else {
             Audio_StopSfxById(NA_SE_EV_WEB_VIBRATION);
         }
@@ -399,7 +394,7 @@ void BgYdanSp_WallWebIdle(BgYdanSp* this, PlayState* play) {
     if (Flags_GetSwitch(play, this->burnSwitchFlag) || (this->trisCollider.base.acFlags & AC_HIT)) {
         this->dyna.actor.home.pos.y = this->dyna.actor.world.pos.y + 80.0f;
         BgYdanSp_BurnWeb(this, play);
-    } else if (player->heldItemAction == PLAYER_IA_STICK && player->unk_860 != 0) {
+    } else if (player->heldItemAction == PLAYER_IA_DEKU_STICK && player->unk_860 != 0) {
         func_8002DBD0(&this->dyna.actor, &sp30, &player->meleeWeaponInfo[0].tip);
         if (fabsf(sp30.x) < 100.0f && sp30.z < 1.0f && sp30.y < 200.0f) {
             OnePointCutscene_Init(play, 3020, 40, &this->dyna.actor, CAM_ID_MAIN);
